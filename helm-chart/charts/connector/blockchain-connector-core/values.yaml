@@ -112,86 +112,12 @@ autoscaling:
   #        type: Utilization
   #        averageUtilization: 80
 
-### openshift specific route definition. Will not work on plain k8s
-#route:
-#  # -- route config for the trusted issuers list endpoint
-#  til:
-#    ## -- should the deployment create openshift routes
-#    enabled: false
-#    # -- annotations to be added to the route
-#    annotations: { }
-#    # -- host to be used
-#    # host: localhost
-#    # -- tls configuration for the route
-#    tls: { }
-#    # termination: edge
-#    # configuration for creation of certificates, using cert-manager.
-#    certificate: { }
-#    # allows to specify the issuer to be used.
-#    # issuer:
-#    #   kind: ClusterIssuer
-#    #   name: letsencrypt-aws-prod
-#  # -- route config for the trusted issuers registry endpoint
-#  tir:
-#    ## -- should the deployment create openshift routes
-#    enabled: false
-#    # -- annotations to be added to the route
-#    annotations: { }
-#    # -- host to be used
-#    # host: localhost
-#    # -- tls configuration for the route
-#    tls: { }
-#    # termination: edge
-#    # configuration for creation of certificates, using cert-manager.
-#    certificate: { }
-#    # allows to specify the issuer to be used.
-#    # issuer:
-#    #   kind: ClusterIssuer
-#    #   name: letsencrypt-aws-prod
-
-## ingress configuration
-#ingress:
-#  # -- route config for the blockchain-connector-core endpoint
-#  bcc:
-#    # -- should there be an ingress to connect blockchain-connector-core with the public internet
-#    enabled: false
-#    # -- annotations to be added to the ingress
-#    annotations: { }
-#    # kubernetes.io/ingress.class: "ambassador"
-#    ## example annotations, allowing cert-manager to automatically create tls-certs and forcing everything to use ssl.
-#    # kubernetes.io/tls-acme: "true"
-#    # ingress.kubernetes.io/ssl-redirect: "true"
-#    # -- all hosts to be provided
-#    hosts: [ ]
-#    ## provide a hosts and the paths that should be available
-#    # - host: localhost
-#    # -- configure the ingress' tls
-#    tls: [ ]
-#    # - secretName: bcc-tls
-#    # hosts:
-#    # - bcc.fiware.org
-#  # -- route config for the trusted issuers registry endpoint
-#  tir:
-#    # -- should there be an ingress to connect til with the public internet
-#    enabled: false
-#    # -- annotations to be added to the ingress
-#    annotations: { }
-#    # kubernetes.io/ingress.class: "ambassador"
-#    ## example annotations, allowing cert-manager to automatically create tls-certs and forcing everything to use ssl.
-#    # kubernetes.io/tls-acme: "true"
-#    # ingress.kubernetes.io/ssl-redirect: "true"
-#    # -- all hosts to be provided
-#    hosts: [ ]
-#    ## provide a hosts and the paths that should be available
-#    # - host: localhost
-#    # -- configure the ingress' tls
-#    tls: [ ]
-#    # - secretName: til-tls
-#    # hosts:
-#    # - til.fiware.org
+### If no external access is required(and no template for ingress ore route exists), no such values should exist
 
 # -- port that the blockchain-connector-core container uses
 port: 8080
+
+## Is the prometheus dependency part of the application? I also was(currently) not able to reach 9090
 
 ## configuration for prometheus monitoring
 prometheus:

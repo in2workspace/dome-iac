@@ -3,9 +3,15 @@ kind: ConfigMap
 metadata:
   name: {{ include "bcc.fullname" . }}
 data:
-  custom-config.yml: |
+  # the config structure is somewhat confusing, I would recommend to restructure it.
+  # when reading the config, it looks as if the lower part is just for the blockchain connector, while the upper part is for the 
+  # orion connector.
+  integration-config.yml: |
     orion-ld-if:
       orion-ld:
+        # I have seen that this address is used for connecting orion AND as the location in the events
+        # Since the connector will (usually) connect to Orion through the internal dns(e.g. something like http://orion-ld:1026), while the consumer 
+        # of the event uses the external address(f.e. https://orion-ld.dome.eu), probably with IAM in front, we need the ability to configure it seperatly 
         domain: {{ .Values.orion.address }}
         path:
           entities: {{ .Values.orion.entitiesPath }}
@@ -17,6 +23,7 @@ data:
           entities:  {{ .Values.adapter.publishPath }}
       subscription:
         type: {{ .Values.orion.subscription.type }}
+        #  there are 2 notfication endpoints configured. Can they be different? If not, it makes sense to merge the config
         notification-endpoint-uri: {{ .Values.orion.subscription.notificationEndpoint }}
         entities: >
            {{ .Values.orion.subscription.entities }}
