@@ -32,7 +32,9 @@ services:
 
   provider-dlt-adapter:
     container_name: provider-dlt-adapter
-    image: ocanades/dlt-adapter:1.0.0
+    image: aleniet/dlt-adapter:1.1
+    environment:
+      - "PRIVATE_KEY=0xe2afef2c880b138d741995ba56936e389b0b5dd2943e21e4363cc70d81c89346" 
     ports:
       - "8083:8080"
     networks:
