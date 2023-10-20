@@ -86,7 +86,7 @@ services:
       KC_DB_USERNAME: "user"
       KC_DB_PASSWORD: "1234"
     volumes:
-      - ./imports:/opt/keycloak/data/import
+      - ./identity-service/imports:/opt/keycloak/data/import
     links:
       - postgres
     networks:
