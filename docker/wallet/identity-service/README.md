@@ -18,6 +18,22 @@ For our Wallet application, we've set up a custom REALM named "WalletIdP". Below
 
 This client configuration is essential for the Wallet application to interact with Keycloak for authentication and authorization purposes.
 
+### Users configuration:
+
+These are the initial users available in the WalletIdP realm:
+
+- **User: adminWallet**
+  - **Role:** Admin
+  - **Description:** This user has administration permissions within the REALM. They can create, delete users, log in within the application, and more.
+  - **Username:** adminWallet
+  - **Password:** adminPass
+
+- **User: userWallet**
+  - **Role:** Standard User
+  - **Description:** A standard application user without any administrative privileges.
+  - **Username:** userWallet
+  - **Password:** userPass
+
 ## How-to: Use Keycloak Admin Console
 
 1. Start by setting up your local environment.
@@ -29,8 +45,8 @@ This client configuration is essential for the Wallet application to interact wi
     - **Password:** adminPass 
 
 > Note: If you prefer to log in with the Keycloak admin rather than the wallet admin, visit the following URL: [http://localhost:8084/admin/master/console/](http://localhost:8084/admin/master/console/). However, keep in mind that this 'admin' user is not part of the WalletIdP application but belongs to the Master application. To access with the Keycloak admin use this credentials:
-   - **Username:** adminWallet
-   - **Password:** adminPass 
+    **Username:** adminWallet
+    **Password:** adminPass 
 
 6. Once inside, you can act as an administrator and manage your Wallet Realm if you logged in as adminWallet. Alternatively, if you logged in as the Keycloak admin, you can manage all the Realms.
 ## How-to: Obtain User Token
