@@ -46,6 +46,7 @@ curl --location 'http://localhost:8084/realms/WalletIdP/protocol/openid-connect/
 --data-urlencode 'client_secret=fV51P8jFBo8VnFKMMuP3imw3H3i5mNck' \
 --data-urlencode 'grant_type=password'
 ```
+> Note: When communicating between Docker containers, instead of using `localhost`, you should use `wallet-identity-provider`, which is the name of the container. Adjust your requests accordingly if you're trying to communicate from a Docker environment.
 
 ## Version and Creation Date
 Version: 1.0.0
