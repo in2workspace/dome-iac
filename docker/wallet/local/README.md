@@ -34,7 +34,7 @@ Before running the application, you need to clone the required repositories and 
 
 Go to the root directory of the project and run the following command:
 ```bash
-cd docker/wallet
+cd docker/wallet/local
 ```
 
 Execute the following command to deploy the docker compose:
