@@ -3,7 +3,7 @@ services:
 
   wallet-driving-application:
     container_name: wallet-driving-application
-    image: ocanades/wallet-wda:1.0.0
+    image: wallet-wda:latest
     ports:
       - "4200:4200"
     networks:
