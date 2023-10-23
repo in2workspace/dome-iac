@@ -16,7 +16,7 @@ Before running the application, you need to clone the required repositories and 
 * Change to the dev branch and build the Docker image:
     ```bash
     cd in2-wallet-wca
-    git checkout dev
+    git checkout develop
     docker build -t wallet-wca .
     ```
 * Clone the in2-wallet-wda repository:
@@ -26,7 +26,7 @@ Before running the application, you need to clone the required repositories and 
 * Change to the dev branch and build the Docker image:
     ```bash
     cd in2-wallet-wda
-    git checkout dev
+    git checkout develop
     docker build -t wallet-wda .
     ```
 
