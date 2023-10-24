@@ -9,7 +9,7 @@ This directory contains the files necessary to build the wallet docker image.
 
 Go to the root directory of the project and run the following command:
 ```bash
-cd docker/wallet
+cd docker/wallet/dev
 ```
 
 Execute the following command to deploy the docker compose:

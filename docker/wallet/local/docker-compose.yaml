@@ -1,0 +1,119 @@
+version: "3.8"
+services:
+
+  wallet-driving-application:
+    container_name: wallet-driving-application
+    image: wallet-wda:latest
+    ports:
+      - "4200:4200"
+    networks:
+      local_network:
+
+  wallet-creation-application:
+    container_name: wallet-creation-application
+    image: wallet-wca:latest
+    environment:
+      SPRING_PROFILES_ACTIVE: "local-docker"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "D83Wh$tb83D8"
+      SERVER_PORT: "8080"
+      APP_URL_API: "https://walletapidev.in2.es"
+      APP_URL_ORION: "http://wallet-orion:1026/v2/entities"
+      APP_URL_KEYCLOAK: "http://wallet-identity-provider:8084/realms/WalletIdP"
+    command:
+      - run
+    links:
+      - mysql
+    ports:
+      - "8080:8080"
+    networks:
+      local_network:
+
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    command: "--default-authentication-plugin=mysql_native_password"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "D83Wh$tb83D8"
+      MYSQL_DATABASE: "test"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "1234"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      local_network:
+
+  orion:
+    container_name: orion
+    image: fiware/orion:latest
+    command: "-dbhost mongodb -port 1026"
+    links:
+      - mongodb
+    ports:
+      - "1026:1026"
+    networks:
+      local_network:
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:4.4
+    command: "--nojournal"
+    volumes:
+      - orion_data:/data/db
+      - orion_db_config:/data/configdb
+    networks:
+      local_network:
+
+  wallet-identity-provider:
+    container_name: wallet-identity-provider
+    image: quay.io/keycloak/keycloak:latest
+    ports:
+      - 8084:8084
+    command: 
+      - 'start-dev'
+      - '--import-realm'
+    environment:
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "1234"
+      KC_HTTP_PORT: "8084"
+      KC_DB: "postgres"
+      KC_DB_URL: "jdbc:postgresql://postgres/keycloak"
+      KC_DB_URL_PORT: "5433"
+      KC_DB_USERNAME: "user"
+      KC_DB_PASSWORD: "1234"
+    volumes:
+      - ./identity-service/imports:/opt/keycloak/data/import
+    links:
+      - postgres
+    networks:
+      local_network:
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: "keycloak"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "1234"
+    ports:
+      - '5433:5433'
+    restart: unless-stopped
+    networks:
+      local_network:
+
+  
+
+networks:
+    local_network:
+
+volumes:
+  orion_data:
+  orion_db_config:
+  mysql_data:
+  postgres_data:
