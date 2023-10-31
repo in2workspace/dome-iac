@@ -1,55 +1,105 @@
 version: "3.8"
 services:
 
-  wallet-driving-application:
-    container_name: wallet-driving-application
-    image: wallet-wda:latest
-    ports:
-      - "4200:4200"
-    networks:
-      local_network:
+  # wallet-driving-application:
+  #   container_name: wallet-driving-application
+  #   image: wallet-wda:latest
+  #   ports:
+  #     - "4200:4200"
+  #   networks:
+  #     local_network:
 
-  wallet-creation-application:
-    container_name: wallet-creation-application
-    image: wallet-wca:latest
+  # wallet-creation-application:
+  #   container_name: wallet-creation-application
+  #   image: wallet-wca:latest
+  #   environment:
+  #     SPRING_PROFILES_ACTIVE: "local-docker"
+  #     SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false"
+  #     SPRING_DATASOURCE_USERNAME: "root"
+  #     SPRING_DATASOURCE_PASSWORD: "D83Wh$tb83D8"
+  #     SERVER_PORT: "8080"
+  #     APP_URL_API: "https://walletapidev.in2.es"
+  #     APP_URL_ORION: "http://wallet-orion:1026/v2/entities"
+  #     APP_URL_KEYCLOAK: "http://wallet-identity-provider:8084/realms/WalletIdP"
+  #   command:
+  #     - run
+  #   links:
+  #     - mysql
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     local_network:
+
+  # mysql:
+  #   container_name: mysql
+  #   image: mysql:8.0
+  #   command: "--default-authentication-plugin=mysql_native_password"
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: "D83Wh$tb83D8"
+  #     MYSQL_DATABASE: "test"
+  #     MYSQL_USER: "user"
+  #     MYSQL_PASSWORD: "1234"
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   ports:
+  #     - "3306:3306"
+  #   networks:
+  #     local_network:
+
+  wallet-data:
+    container_name: wallet-data
+    image: wallet-data:latest
     environment:
       SPRING_PROFILES_ACTIVE: "local-docker"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false"
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "D83Wh$tb83D8"
-      SERVER_PORT: "8080"
-      APP_URL_API: "https://walletapidev.in2.es"
-      APP_URL_ORION: "http://wallet-orion:1026/v2/entities"
-      APP_URL_KEYCLOAK: "http://wallet-identity-provider:8084/realms/WalletIdP"
+      SERVER_PORT: "8086"
+      APP_URL_API: "http://wallet-data:8086"
+      APP_URL_ORION-LD-ADAPTER: "http://orionld-adapter:8080"
+    command: 
+     - run
+    ports:
+    - "8086:8086"
+    links:
+      - orionld-adapter
+    networks:
+      local_network:
+
+  wallet-user-registry:
+    container_name: wallet-user-registry
+    image: wallet-user-registry:latest
+    environment:
+      SPRING_PROFILES_ACTIVE: "local-docker"
+      SERVER_PORT: "8085"
+      APP_URL_API: "http://wallet-user-registry:8085"
+      WALLET_DATA_URL: "http://wallet-data:8086"
+      KEYCLOAK_URL: "http://wallet-identity-provider:8084"
+      KEYCLOAK_REALM: "WalletIdP"
+      KEYCLOAK_CLIENT_SECRET: "fV51P8jFBo8VnFKMMuP3imw3H3i5mNck"
+      KEYCLOAK_CLIENT_ID: "wallet-client"
     command:
       - run
-    links:
-      - mysql
     ports:
-      - "8080:8080"
+      - "8085:8085"
     networks:
       local_network:
 
-  mysql:
-    container_name: mysql
-    image: mysql:8.0
-    command: "--default-authentication-plugin=mysql_native_password"
-    restart: always
+
+  orionld-adapter:
+    container_name: orionld-adapter
+    image: orion-ld-adapter:latest
     environment:
-      MYSQL_ROOT_PASSWORD: "D83Wh$tb83D8"
-      MYSQL_DATABASE: "test"
-      MYSQL_USER: "user"
-      MYSQL_PASSWORD: "1234"
-    volumes:
-      - mysql_data:/var/lib/mysql
+      - "SPRING_PROFILES_ACTIVE=dev"
     ports:
-      - "3306:3306"
+      - "8082:8080"
+    volumes:
+      - ./provider-config.yml:/src/main/resources/custom-config.yml
     networks:
       local_network:
 
-  orion:
-    container_name: orion
-    image: fiware/orion:latest
+
+  orion-ld:
+    container_name: orion-ld
+    image: fiware/orion-ld:latest
     command: "-dbhost mongodb -port 1026"
     links:
       - mongodb
@@ -67,6 +117,7 @@ services:
       - orion_db_config:/data/configdb
     networks:
       local_network:
+  
 
   wallet-identity-provider:
     container_name: wallet-identity-provider
@@ -110,7 +161,7 @@ services:
   
 
 networks:
-    local_network:
+  local_network:
 
 volumes:
   orion_data:
