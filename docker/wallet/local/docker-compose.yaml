@@ -71,7 +71,7 @@ services:
       SPRING_PROFILES_ACTIVE: "local-docker"
       SERVER_PORT: "8085"
       APP_URL_API: "http://wallet-user-registry:8085"
-      WALLET_DATA_URL: "http://wallet-data:8086"
+      WALLET_DATA_URL: "http://wallet-data:8086/api/users"
       KEYCLOAK_URL: "http://wallet-identity-provider:8084"
       KEYCLOAK_REALM: "WalletIdP"
       KEYCLOAK_CLIENT_SECRET: "fV51P8jFBo8VnFKMMuP3imw3H3i5mNck"
