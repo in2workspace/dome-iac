@@ -107,6 +107,39 @@ services:
     networks:
       local_network:
 
+  # vault:
+  #   container_name: vault
+  #   image: hashicorp/vault
+  #   command: vault server -config=/vault/config/config.json
+  #   cap_add:
+  #     - IPC_LOCK
+  #   ports:
+  #     - "8200:8200"
+  #   volumes:
+  #     - ./vault/config.json:/vault/config/config.json
+  #     - vault_file:/vault/data
+  #     - vault_logs:/vault/logs
+  #     - vault_file:/vault/file
+  #   networks:
+  #     local_network:
+
+  # vault:
+  #   image: hashicorp/vault
+  #   container_name: vault
+  #   restart: on-failure:10
+  #   ports:
+  #     - "8200:8200"
+  #   # environment:
+  #   #   VAULT_ADDR: 'http://0.0.0.0:8200'
+  #   cap_add:
+  #     - IPC_LOCK
+  #   volumes:
+  #     - vault-volume:/data
+  #   healthcheck:
+  #     retries: 5
+  #   command: ./workflow-vault.sh
+  #   networks:
+  #     local_network:
   
 
 networks:
@@ -117,3 +150,6 @@ volumes:
   orion_db_config:
   mysql_data:
   postgres_data:
+  vault-volume:
+  vault_logs:
+  vault_file:
