@@ -82,6 +82,21 @@ services:
       - orionld-adapter
     networks:
       local_network:
+      
+  wallet-crypto:
+    container_name: wallet-crypto
+    image: wallet-crypto:latest
+    environment:
+      SPRING_PROFILES_ACTIVE: "local-docker"
+      SERVER_PORT: "8081"
+      APP_URL_API: "http://wallet-crypto:8081"
+      WALLET_DATA_URL: "http://wallet-data:8086/api/dids"
+    command:
+      - run
+    ports:
+      - "8081:8081"
+    networks:
+      local_network:
 
   orionld-adapter:
     container_name: orionld-adapter
