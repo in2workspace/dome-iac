@@ -49,7 +49,7 @@ services:
 
   wallet-user-registry:
     container_name: wallet-user-registry
-    image: wallet-user-registry:latest
+    image: in2kizuna/wallet-user-registry:v1.0.0 
     environment:
       SPRING_PROFILES_ACTIVE: "local-docker"
       SERVER_PORT: "8085"
@@ -68,7 +68,7 @@ services:
 
   wallet-data:
     container_name: wallet-data
-    image: wallet-data:latest
+    image: in2kizuna/wallet-data:v1.0.0 
     environment:
       SPRING_PROFILES_ACTIVE: "local-docker"
       SERVER_PORT: "8086"
@@ -85,7 +85,7 @@ services:
       
   wallet-crypto:
     container_name: wallet-crypto
-    image: wallet-crypto:latest
+    image: in2kizuna/wallet-crypto:v1.0.0
     environment:
       SPRING_PROFILES_ACTIVE: "local-docker"
       SERVER_PORT: "8081"
@@ -100,7 +100,7 @@ services:
 
   orionld-adapter:
     container_name: orionld-adapter
-    image: orion-ld-adapter:latest
+    image: in2kizuna/orion-ld-adapter:v1.0.0
     environment:
       - "SPRING_PROFILES_ACTIVE=dev"
     ports:
