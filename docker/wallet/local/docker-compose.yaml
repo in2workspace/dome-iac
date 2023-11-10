@@ -176,20 +176,38 @@ services:
   vault:
     image: hashicorp/vault:latest
     container_name: vault
-    restart: on-failure:10
     ports:
-      - "8201:8201"
+      - "8250:8250"
+    volumes:
+      - ./config.json:/vault/config/config.json
+      - VAULT_FILE:/vault/data
+      - VAULT_LOGS:/vault/logs
+      - VAULT_FILE:/vault/file
     environment:
-      VAULT_ADDR: 'https://0.0.0.0:8201'
+      VAULT_DEV_ROOT_TOKEN_ID: 'my-custom-root-token'  # Token raíz personalizado
+      VAULT_ADDR: 'http://0.0.0.0:8250'
     cap_add:
       - IPC_LOCK
-    volumes:
-      - vault-volume:/data
-    healthcheck:
-      retries: 5
-    command: ./workflow-vault.sh
+    entrypoint: vault server
+    command: [
+      "-config=/vault/config/config.json",
+      "-dev",
+      "-dev-root-token-id=my-custom-root-token"
+    ]
     networks:
       local_network:
+
+  # vault-init:
+  #   image: alpine:latest
+  #   container_name: vault-init
+  #   volumes:
+  #     - ./init-unseal-vault.sh:/init-unseal-vault.sh
+  #   depends_on:
+  #     - vault
+  #   entrypoint: /bin/sh
+  #   command: -c 'apk add --no-cache curl jq && chmod +x /init-unseal-vault.sh && /init-unseal-vault.sh'
+  #   networks:
+  #     local_network:
   
 
 networks:
@@ -200,4 +218,5 @@ volumes:
   orion_db_config:
   mysql_data:
   postgres_data:
-  vault-volume:
+  VAULT_LOGS:
+  VAULT_FILE:

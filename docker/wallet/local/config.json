@@ -1,7 +1,7 @@
 {
     "listener": {
       "tcp": {
-        "address": "0.0.0.0:8200",
+        "address": "0.0.0.0:8250",
         "tls_disable": "true"
       }
     },
@@ -12,5 +12,5 @@
     },
     "default_lease_ttl": "168h",
     "max_lease_ttl": "0h",
-    "api_addr": "http://0.0.0.0:8200"
+    "api_addr": "http://0.0.0.0:8250"
   }
