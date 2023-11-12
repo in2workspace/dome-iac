@@ -1,17 +1,17 @@
 version: "3.8"
 services:
 
-  # wallet-driving-application:
-  #   container_name: wallet-driving-application
-  #   image: wallet-wda:latest
-  #   ports:
-  #     - "4200:4200"
-  #   networks:
-  #     local_network:
+  wallet-driving-application:
+    container_name: wallet-driving-application
+    image: in2kizuna/wallet-driving-application:v1.0.0 
+    ports:
+      - "4200:4203"
+    networks:
+      local_network:
 
   # wallet-creation-application:
   #   container_name: wallet-creation-application
-  #   image: wallet-wca:latest
+  #   image: in2kizuna/wallet-driving-application:v1.0.0 
   #   environment:
   #     SPRING_PROFILES_ACTIVE: "local-docker"
   #     SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false"
