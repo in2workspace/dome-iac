@@ -32,7 +32,7 @@ cat root_token.txt
 4. Configuring the Token in Docker Compose
 - Open your docker-compose.yaml file on docker/wallet/local.
 - Locate the service configuration for wallet-crypto.
-- And paste the token on the VAULT_TOKEN enviroment variable and save your changes.
+- And paste the token into the VAULT_TOKEN enviroment variable and save your changes.
 
 5. Launching Remaining Services
 - After updating the docker-compose.yml file, start the rest of the services:
