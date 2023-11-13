@@ -7,17 +7,21 @@ HashiCorp Vault is a robust tool for managing sensitive data such as tokens, pas
 The goal is to integrate Vault to securely handle private keys, facilitating secure access and management during local development.
 
 ## How-To retrieve and Use Vault Token for Wallet-Crypto
-
-1. Accessing the Vault Container
-Open your terminal and access the Vault
+1. Starting the Vault Service
+- First, start only the Vault service:
+```sh
+docker-compose up -d vault
+```
+2. Accessing the Vault Container
+- Open your terminal and access the Vault
 ```sh
 docker exec -it vault
 ```
-2. Retrieving the Vault Token
+3. Retrieving the Vault Token
 Once inside the Vault container:
 - Navigate to the Vault directory:
 ```sh
-docker exec -it vault
+cd vault
 ```
 - Display the Vault's root token:
 ```sh
@@ -25,10 +29,17 @@ cat root_token.txt
 ```
 - Copy the displayed token.
 
-3. Configuring the Token in Docker Compose
+4. Configuring the Token in Docker Compose
 - Open your docker-compose.yaml file on docker/wallet/local.
 - Locate the service configuration for wallet-crypto.
 - And paste the token on the VAULT_TOKEN enviroment variable and save your changes.
+
+5. Launching Remaining Services
+- After updating the docker-compose.yml file, start the rest of the services:
+```sh
+docker-compose up -d
+```
+This will bring up all services, including the wallet-crypto service with the new Vault token configuration.
 
 ## Conclusion
 You have successfully retrieved the Vault token and configured it for the Wallet-Crypto service in your local Docker environment. This token is crucial for enabling secure interactions with the Vault for key management during development.
