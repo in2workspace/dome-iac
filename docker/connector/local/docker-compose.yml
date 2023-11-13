@@ -13,7 +13,7 @@ services:
     ports:
       - "8081:8080"
     volumes:
-      - ./provider-config.yml:/src/main/resources/integration-config.yml
+      - ./marketplace1-config.yml:/src/main/resources/integration-config.yml
     links:
       - provider-orionld-adapter
       - provider-dlt-adapter
@@ -28,7 +28,7 @@ services:
     ports:
       - "8082:8080"
     volumes:
-      - ./provider-config.yml:/src/main/resources/application.yml
+      - ./marketplace1-config.yml:/src/main/resources/application.yml
     networks:
       - local_network
 
@@ -74,7 +74,7 @@ services:
     ports:
       - "8091:8080"
     volumes:
-      - ./marketplace-config.yml:/src/main/resources/integration-config.yml
+      - ./marketplace2-config.yml:/src/main/resources/integration-config.yml
     links:
       - marketplace-orionld-adapter
       - marketplace-dlt-adapter
@@ -89,7 +89,7 @@ services:
     ports:
       - "8092:8080"
     volumes:
-      - ./marketplace-config.yml:/src/main/resources/application.yml
+      - ./marketplace2-config.yml:/src/main/resources/application.yml
     networks:
       - local_network
 
