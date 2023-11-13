@@ -106,7 +106,7 @@ services:
     ports:
       - "8082:8080"
     volumes:
-      - ./provider-config.yml:/src/main/resources/application.yml
+      - ./marketplace1-config.yml:/src/main/resources/application.yml
     networks:
       local_network:
 
