@@ -73,13 +73,13 @@ services:
       SPRING_PROFILES_ACTIVE: "local-docker"
       SERVER_PORT: "8086"
       APP_URL_API: "http://wallet-data:8086"
-      APP_URL_ORION-LD-ADAPTER: "http://orionld-adapter:8080"
+      APP_URL_ORION-LD-ADAPTER: "http://broker-adapter:8080"
     command: 
      - run
     ports:
     - "8086:8086"
     links:
-      - orionld-adapter
+      - broker-adapter
     networks:
       local_network:
       
@@ -98,15 +98,15 @@ services:
     networks:
       local_network:
 
-  orionld-adapter:
-    container_name: orionld-adapter
-    image: in2kizuna/orion-ld-adapter:v1.0.0
+  broker-adapter:
+    container_name: broker-adapter
+    image: in2kizuna/broker-adapter:v1.0.0-SNAPSHOT
     environment:
       - "SPRING_PROFILES_ACTIVE=dev"
     ports:
       - "8082:8080"
     volumes:
-      - ./provider-config.yml:/src/main/resources/application.yml
+      - ./external-config.yml:/src/main/resources/external-config.yml
     networks:
       local_network:
 
@@ -194,6 +194,5 @@ volumes:
   orion_db_config:
   mysql_data:
   postgres_data:
-  SHARED_DATA:
   VAULT_LOGS:
   VAULT_FILE:
