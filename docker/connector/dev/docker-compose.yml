@@ -147,7 +147,7 @@ services:
     container_name: mkt2-context-broker
     image: fiware/orion-ld:latest
     restart: always
-    command: "-dbhost marketplace-mongo -port 1026"
+    command: "-dbhost mkt2-mongo -port 1026"
     ports:
       - "1028:1026"
     links:

@@ -25,7 +25,8 @@ broker-adapter:
 
 # Context Broker Configuration
 broker:
-  domain: http://mkt1-context-broker:1026
+  externalDomain: https://<example.com>/orion-ld
+  internalDomain: http://mkt1-context-broker:1026
 
 # NGSI Subscription Configuration
 ngsi-subscription:
