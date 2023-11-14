@@ -11,7 +11,7 @@ services:
 
   # wallet-creation-application:
   #   container_name: wallet-creation-application
-  #   image: in2kizuna/wallet-driving-application:v1.0.0 
+  #   image: in2kizuna/wallet-creation-application:v1.0.0 
   #   environment:
   #     SPRING_PROFILES_ACTIVE: "local-docker"
   #     SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false"
