@@ -15,7 +15,7 @@ docker-compose up -d vault
 2. Accessing the Vault Container
 - Open your terminal and access the Vault
 ```sh
-docker exec -it vault
+docker exec -it vault sh
 ```
 3. Retrieving the Vault Token
 Once inside the Vault container:
