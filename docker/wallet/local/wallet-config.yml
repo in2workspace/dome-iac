@@ -1,6 +1,6 @@
 # App Configuration
 broker:
-  domain: http://orion-ld:1026
-  paths:
-    entities: /ngsi-ld/v1/entities
-    subscriptions: /ngsi-ld/v1/subscriptions
+  internalDomain: http://orion-ld:1026
+broker-adapter:
+  openapi:
+    url: http://broker-adapter:8080
