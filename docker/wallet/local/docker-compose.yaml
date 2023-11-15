@@ -85,12 +85,18 @@ services:
       
   wallet-crypto:
     container_name: wallet-crypto
-    image: in2kizuna/wallet-crypto:v1.0.0
+    image: in2kizuna/wallet-crypto:v1.0.0-SNAPSHOT
     environment:
       SPRING_PROFILES_ACTIVE: "local-docker"
       SERVER_PORT: "8081"
       APP_URL_API: "http://wallet-crypto:8081"
       WALLET_DATA_URL: "http://wallet-data:8086/api/dids"
+      VAULT_AUTHENTICATION: "token"
+      VAULT_TOKEN: ""
+      VAULT_HOST: "vault"
+      VAULT_SCHEME: "http"
+      VAULT_PORT: "8201"
+      VAULT_KV_ENABLED: "true"
     command:
       - run
     ports:
