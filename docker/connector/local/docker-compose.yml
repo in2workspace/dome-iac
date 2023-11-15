@@ -5,7 +5,8 @@ services:
   # Marketplace 1 Instance
   mkt1-blockchain-connector:
     container_name: mkt1-blockchain-connector
-    image: in2kizuna/blockchain-connector:v1.0.0-SNAPSHOT
+#    image: in2kizuna/blockchain-connector:v1.0.0-SNAPSHOT
+    image: blockchain-connector:latest
     environment:
       - "DATABASE_URL=jdbc:mysql://mkt1-mysql:3306/mktdb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
       - "ORGANIZATION_ID=VATES-00869735"
@@ -87,7 +88,8 @@ services:
 
   mkt2-blockchain-connector:
     container_name: mkt2-blockchain-connector
-    image: in2kizuna/blockchain-connector:v1.0.0-SNAPSHOT
+#    image: in2kizuna/blockchain-connector:v1.0.0-SNAPSHOT
+    image: blockchain-connector:latest
     environment:
       - "DATABASE_URL=jdbc:mysql://mkt2-mysql:3306/mktdb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
       - "ORGANIZATION_ID=VATFR-00900867"

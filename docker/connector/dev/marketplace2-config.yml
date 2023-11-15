@@ -1,7 +1,20 @@
 # Blockchain Connector Configuration
-blockchain-connector:
-  openapi:
+openapi:
+  server:
     url: http://mkt2-blockchain-connector:8080
+    description: Test Environment
+  info:
+    title: Blockchain Connector API
+    version: 1.0.0-SNAPSHOT
+    description: Blockchain Connector Software Solution
+    termsOfService: https://example.com/terms-of-service
+    license:
+      name: Apache 2.0
+      url: https://www.apache.org/licenses/LICENSE-2.0.html
+    contact:
+      email: info@in2.es
+      name: IN2, Ingeniería de la Información
+      url: https://in2.es
 
 # DLT Adapter Configuration
 dlt-adapter:
