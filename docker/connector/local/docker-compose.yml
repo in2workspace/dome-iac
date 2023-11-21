@@ -8,10 +8,9 @@ services:
 #    image: in2kizuna/blockchain-connector:v1.0.0-SNAPSHOT
     image: blockchain-connector:latest
     environment:
-      - "DATABASE_URL=jdbc:mysql://mkt1-mysql:3306/mktdb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
+      - "DATABASE_URL=r2dbc:postgresql://mkt1-postgres:5432/mktdb"
+      - "FLYWAY_URL=jdbc:postgresql://mkt1-postgres:5432/mktdb"
       - "ORGANIZATION_ID=VATES-00869735"
-      - "MYSQL_USER=user"
-      - "MYSQL_PASSWORD=1234"
     ports:
       - "8081:8080"
     volumes:
@@ -19,7 +18,7 @@ services:
     links:
       - mkt1-broker-adapter
       - mkt1-dlt-adapter
-      - mkt1-mysql
+      - mkt1-postgres
     networks:
       - local_network
 
@@ -67,105 +66,103 @@ services:
     networks:
       - local_network
 
-  mkt1-mysql:
-    container_name: mkt1-mysql
-    image: mysql:8.0
-    command: "--default-authentication-plugin=mysql_native_password"
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: D83Wh$tb83D8
-      MYSQL_DATABASE: mktdb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 1234
-    volumes:
-      - mkt1_mysql:/var/lib/mysql
+  mkt1-postgres:
+    container_name: mkt1-postgres
+    image: postgres:11
     ports:
-      - "3307:3306"
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=mktdb
+    hostname: mkt1-postgres
     networks:
       - local_network
 
   # Marketplace 2 Instance
 
-  mkt2-blockchain-connector:
-    container_name: mkt2-blockchain-connector
-#    image: in2kizuna/blockchain-connector:v1.0.0-SNAPSHOT
-    image: blockchain-connector:latest
-    environment:
-      - "DATABASE_URL=jdbc:mysql://mkt2-mysql:3306/mktdb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
-      - "ORGANIZATION_ID=VATFR-00900867"
-      - "MYSQL_USER=user"
-      - "MYSQL_PASSWORD=1234"
-    ports:
-      - "8084:8080"
-    volumes:
-      - ./marketplace2-config.yml:/src/main/resources/external-config.yml
-    links:
-      - mkt2-broker-adapter
-      - mkt2-dlt-adapter
-      - mkt2-mysql
-    networks:
-      - local_network
-
-  mkt2-mysql:
-    container_name: mkt2-mysql
-    image: mysql:8.0
-    command: "--default-authentication-plugin=mysql_native_password"
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: D83Wh$tb83D8
-      MYSQL_DATABASE: mktdb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 1234
-    volumes:
-      - mkt2_mysql:/var/lib/mysql
-    ports:
-      - "3308:3306"
-    networks:
-      - local_network
-
-  mkt2-dlt-adapter:
-    container_name: mkt2-dlt-adapter
-    image: aleniet/dlt-adapter:1.1
-    environment:
-      - "PRIVATE_KEY=0xe2afef2c880b138d741995ba56936e389b0b5dd2943e21e4363cc70d81c89346"
-    ports:
-      - "8085:8080"
-    networks:
-      - local_network
-
-  mkt2-broker-adapter:
-    container_name: mkt2-broker-adapter
-    image: in2kizuna/broker-adapter:v1.0.0-SNAPSHOT
-    ports:
-      - "8086:8080"
-    volumes:
-      - ./marketplace2-config.yml:/src/main/resources/external-config.yml
-    links:
-      - mkt2-context-broker
-    networks:
-      - local_network
-
-  mkt2-context-broker:
-    container_name: mkt2-context-broker
-    image: fiware/orion-ld:latest
-    restart: always
-    command: "-dbhost mkt2-mongo -port 1026"
-    ports:
-      - "1028:1026"
-    links:
-      - mkt2-mongo
-    networks:
-      - local_network
-
-  mkt2-mongo:
-    container_name: mkt2-mongo
-    image: mongo:4.4
-    command: "--nojournal"
-    volumes:
-      - mkt2_data:/data/db
-      - mkt2_db_config:/data/configdb
-    networks:
-      - local_network
+#  mkt2-blockchain-connector:
+#    container_name: mkt2-blockchain-connector
+##    image: in2kizuna/blockchain-connector:v1.0.0-SNAPSHOT
+#    image: blockchain-connector:latest
+#    environment:
+##      - "DATABASE_URL=jdbc:mysql://mkt2-mysql:3306/mktdb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
+#      - "DATABASE_URL=r2dbc:mysql://mkt2-mysql:3306/mktdb?sslMode=DISABLED&useServerPrepareStatement=true"
+#      - "FLYWAY_URL=jdbc:mysql://mkt1-mysql:3306/mktdb?sslMode=DISABLED&useServerPrepareStatement=true"
+#      - "ORGANIZATION_ID=VATFR-00900867"
+#      - "MYSQL_USER=user"
+#      - "MYSQL_PASSWORD=1234"
+#    ports:
+#      - "8084:8080"
+#    volumes:
+#      - ./marketplace2-config.yml:/src/main/resources/external-config.yml
+#    links:
+#      - mkt2-broker-adapter
+#      - mkt2-dlt-adapter
+#      - mkt2-mysql
+#    networks:
+#      - local_network
+#
+#  mkt2-mysql:
+#    container_name: mkt2-mysql
+#    image: mysql:8.0
+#    command: "--default-authentication-plugin=mysql_native_password"
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: D83Wh$tb83D8
+#      MYSQL_DATABASE: mktdb
+#      MYSQL_USER: user
+#      MYSQL_PASSWORD: 1234
+#    volumes:
+#      - mkt2_mysql:/var/lib/mysql
+#    ports:
+#      - "3308:3306"
+#    networks:
+#      - local_network
+#
+#  mkt2-dlt-adapter:
+#    container_name: mkt2-dlt-adapter
+#    image: aleniet/dlt-adapter:1.1
+#    environment:
+#      - "PRIVATE_KEY=0xe2afef2c880b138d741995ba56936e389b0b5dd2943e21e4363cc70d81c89346"
+#    ports:
+#      - "8085:8080"
+#    networks:
+#      - local_network
+#
+#  mkt2-broker-adapter:
+#    container_name: mkt2-broker-adapter
+#    image: in2kizuna/broker-adapter:v1.0.0-SNAPSHOT
+#    ports:
+#      - "8086:8080"
+#    volumes:
+#      - ./marketplace2-config.yml:/src/main/resources/external-config.yml
+#    links:
+#      - mkt2-context-broker
+#    networks:
+#      - local_network
+#
+#  mkt2-context-broker:
+#    container_name: mkt2-context-broker
+#    image: fiware/orion-ld:latest
+#    restart: always
+#    command: "-dbhost mkt2-mongo -port 1026"
+#    ports:
+#      - "1028:1026"
+#    links:
+#      - mkt2-mongo
+#    networks:
+#      - local_network
+#
+#  mkt2-mongo:
+#    container_name: mkt2-mongo
+#    image: mongo:4.4
+#    command: "--nojournal"
+#    volumes:
+#      - mkt2_data:/data/db
+#      - mkt2_db_config:/data/configdb
+#    networks:
+#      - local_network
 
 networks:
   local_network:
