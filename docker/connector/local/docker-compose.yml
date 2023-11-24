@@ -5,7 +5,7 @@ services:
   # Marketplace 1 Instance
   mkt1-blockchain-connector:
     container_name: mkt1-blockchain-connector
-    image: in2kizuna/blockchain-connector:v1.0.0-SNAPSHOT
+    image: blockchain-connector:latest
     environment:
       - "DATABASE_URL=r2dbc:postgresql://mkt1-postgres:5432/mktdb"
       - "FLYWAY_URL=jdbc:postgresql://mkt1-postgres:5432/mktdb"
@@ -82,7 +82,7 @@ services:
 
   mkt2-blockchain-connector:
     container_name: mkt2-blockchain-connector
-    image: in2kizuna/blockchain-connector:v1.0.0-SNAPSHOT
+    image: blockchain-connector:latest
     environment:
       - "DATABASE_URL=r2dbc:postgresql://mkt2-postgres:5432/mktdb"
       - "FLYWAY_URL=jdbc:postgresql://mkt2-postgres:5432/mktdb"
