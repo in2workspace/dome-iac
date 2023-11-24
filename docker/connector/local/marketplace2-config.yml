@@ -45,4 +45,4 @@ broker:
 ngsi-subscription:
   notificationEndpoint: http://mkt2-blockchain-connector:8080/notifications/broker
   entityTypes: >
-    ProductOffering
+    ProductOrder
