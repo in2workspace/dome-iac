@@ -105,6 +105,21 @@ services:
     networks:
       local_network:
 
+  wallet-api:
+    container_name: wallet-api
+    image: wallet-api 
+    environment:
+      SPRING_PROFILES_ACTIVE: "local-docker"
+      SERVER_PORT: "8088"
+      APP_URL_API: "http://wallet-api:8088"
+      WALLET_CREATION_APPLICATION_URL: "not implemented yet"
+    command:
+      - run
+    ports:
+      - "8088:8088"
+    networks:
+      local_network:
+
   broker-adapter:
     container_name: broker-adapter
     image: in2kizuna/broker-adapter:v1.0.0-SNAPSHOT
