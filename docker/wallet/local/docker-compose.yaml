@@ -107,7 +107,7 @@ services:
 
   wallet-api:
     container_name: wallet-api
-    image: wallet-api 
+    image: in2kizuna/wallet-api:v1.0.0-SNAPSHOT
     environment:
       SPRING_PROFILES_ACTIVE: "local-docker"
       SERVER_PORT: "8088"
