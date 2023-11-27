@@ -1,7 +1,20 @@
 # Blockchain Connector Configuration
-blockchain-connector:
-  openapi:
+openapi:
+  server:
     url: http://mkt2-blockchain-connector:8080
+    description: Test Environment
+  info:
+    title: Blockchain Connector API
+    version: 1.0.0-SNAPSHOT
+    description: Blockchain Connector Software Solution
+    termsOfService: https://example.com/terms-of-service
+    license:
+      name: Apache 2.0
+      url: https://www.apache.org/licenses/LICENSE-2.0.html
+    contact:
+      email: info@in2.es
+      name: IN2, Ingeniería de la Información
+      url: https://in2.es
 
 # DLT Adapter Configuration
 dlt-adapter:
@@ -12,9 +25,9 @@ blockchain:
   rpcAddress: https://red-t.alastria.io/v0/9461d9f4292b41230527d57ee90652a6
   userEthereumAddress: "0xb794f5ea0ba39494ce839613fffba74279579268"
   subscription:
-    active: false
+    active: true
     notificationEndpoint: http://mkt2-blockchain-connector:8080/notifications/dlt
-    entityTypes: >
+    eventTypes: >
       ProductOffering
 
 # Broker Adapter Configuration
@@ -25,7 +38,8 @@ broker-adapter:
 
 # Context Broker Configuration
 broker:
-  domain: http://mkt2-context-broker:1026
+  externalDomain: https://<example.com>/orion-ld
+  internalDomain: http://mkt2-context-broker:1026
 
 # NGSI Subscription Configuration
 ngsi-subscription:
