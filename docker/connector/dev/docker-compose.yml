@@ -7,10 +7,9 @@ services:
     container_name: mkt1-blockchain-connector
     image: in2kizuna/blockchain-connector:v1.0.0-SNAPSHOT
     environment:
-      - "DATABASE_URL=jdbc:mysql://mkt1-mysql:3306/mktdb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
+      - "DATABASE_URL=r2dbc:postgresql://mkt1-postgres:5432/mktdb"
+      - "FLYWAY_URL=jdbc:postgresql://mkt1-postgres:5432/mktdb"
       - "ORGANIZATION_ID=VATES-00869735"
-      - "MYSQL_USER=user"
-      - "MYSQL_PASSWORD=1234"
     ports:
       - "8081:8080"
     volumes:
@@ -18,7 +17,7 @@ services:
     links:
       - mkt1-broker-adapter
       - mkt1-dlt-adapter
-      - mkt1-mysql
+      - mkt1-postgres
     networks:
       - local_network
 
@@ -66,33 +65,28 @@ services:
     networks:
       - local_network
 
-  mkt1-mysql:
-    container_name: mkt1-mysql
-    image: mysql:8.0
-    command: "--default-authentication-plugin=mysql_native_password"
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: D83Wh$tb83D8
-      MYSQL_DATABASE: mktdb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 1234
-    volumes:
-      - mkt1_mysql:/var/lib/mysql
+  mkt1-postgres:
+    container_name: mkt1-postgres
+    image: postgres:11
     ports:
-      - "3307:3306"
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=mktdb
+    hostname: mkt1-postgres
     networks:
       - local_network
 
-  # Marketplace 2 Instance
+    # Marketplace 2 Instance
 
   mkt2-blockchain-connector:
     container_name: mkt2-blockchain-connector
     image: in2kizuna/blockchain-connector:v1.0.0-SNAPSHOT
     environment:
-      - "DATABASE_URL=jdbc:mysql://mkt2-mysql:3306/mktdb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
+      - "DATABASE_URL=r2dbc:postgresql://mkt2-postgres:5432/mktdb"
+      - "FLYWAY_URL=jdbc:postgresql://mkt2-postgres:5432/mktdb"
       - "ORGANIZATION_ID=VATFR-00900867"
-      - "MYSQL_USER=user"
-      - "MYSQL_PASSWORD=1234"
     ports:
       - "8084:8080"
     volumes:
@@ -100,24 +94,20 @@ services:
     links:
       - mkt2-broker-adapter
       - mkt2-dlt-adapter
-      - mkt2-mysql
+      - mkt2-postgres
     networks:
       - local_network
 
-  mkt2-mysql:
-    container_name: mkt2-mysql
-    image: mysql:8.0
-    command: "--default-authentication-plugin=mysql_native_password"
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: D83Wh$tb83D8
-      MYSQL_DATABASE: mktdb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 1234
-    volumes:
-      - mkt2_mysql:/var/lib/mysql
+  mkt2-postgres:
+    container_name: mkt2-postgres
+    image: postgres:11
     ports:
-      - "3308:3306"
+      - "5434:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=mktdb
+    hostname: mkt2-postgres
     networks:
       - local_network
 
@@ -147,7 +137,7 @@ services:
     container_name: mkt2-context-broker
     image: fiware/orion-ld:latest
     restart: always
-    command: "-dbhost marketplace-mongo -port 1026"
+    command: "-dbhost mkt2-mongo -port 1026"
     ports:
       - "1028:1026"
     links:
