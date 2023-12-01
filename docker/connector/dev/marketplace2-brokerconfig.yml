@@ -1,0 +1,4 @@
+# Context Broker Configuration
+broker:
+  externalDomain: https://<example.com>/orion-ld
+  internalDomain: http://mkt2-context-broker:1026
