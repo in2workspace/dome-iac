@@ -36,13 +36,8 @@ broker-adapter:
   openapi:
     url: http://localhost:8080 # broker-adapter configuration
 
-# Context Broker Configuration
-broker:
-  externalDomain: https://<example.com>/orion-ld
-  internalDomain: http://mkt2-context-broker:1026
-
 # NGSI Subscription Configuration
 ngsi-subscription:
   notificationEndpoint: http://mkt2-blockchain-connector:8080/notifications/broker
   entityTypes: >
-    ProductOffering
+    ProductOrder
