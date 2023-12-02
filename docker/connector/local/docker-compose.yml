@@ -52,13 +52,11 @@ services:
   broker-adapter:
     container_name: broker-adapter
     hostname: broker-adapter
-    image: broker-adapter:latest
+    image: in2kizuna/broker-adapter:v1.0.0-SNAPSHOT
     environment:
       - "BROKER_EXTERNALDOMAIN=https://<example.com>/orion-ld"
       - "BROKER_INTERNALDOMAIN=http://scorpio:9090"
       - "BROKER-ADAPTER_OPENAPI_URL=http://localhost:8080"
-#    volumes:
-#      - ./marketplace1-brokerconfig.yml:/src/main/resources/external-config.yml
     ports:
       - "8083:8080"
     depends_on:
