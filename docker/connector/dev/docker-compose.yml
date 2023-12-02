@@ -13,7 +13,7 @@ services:
     ports:
       - "8081:8080"
     volumes:
-      - ./marketplace1-connectorconfig.yml:/src/main/resources/external-config.yml
+      - ./marketplace1-config.yml:/src/main/resources/external-config.yml
     links:
       - mkt1-broker-adapter
       - mkt1-dlt-adapter
@@ -37,7 +37,7 @@ services:
     ports:
       - "8083:8080"
     volumes:
-      - ./marketplace1-brokerconfig.yml:/src/main/resources/external-config.yml
+      - ./marketplace1-config.yml:/src/main/resources/external-config.yml
     links:
       - mkt1-context-broker
     networks:
@@ -90,7 +90,7 @@ services:
     ports:
       - "8084:8080"
     volumes:
-      - ./marketplace2-connectorconfig.yml:/src/main/resources/external-config.yml
+      - ./marketplace2-config.yml:/src/main/resources/external-config.yml
     links:
       - mkt2-broker-adapter
       - mkt2-dlt-adapter
@@ -127,7 +127,7 @@ services:
     ports:
       - "8086:8080"
     volumes:
-      - ./marketplace2-brokerconfig.yml:/src/main/resources/external-config.yml
+      - ./marketplace2-config.yml:/src/main/resources/external-config.yml
     links:
       - mkt2-context-broker
     networks:
