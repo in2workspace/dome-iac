@@ -1,13 +1,13 @@
 version: "3.8"
 services:
 
-  wallet-driving-application:
-    container_name: wallet-driving-application
-    image: in2kizuna/wallet-driving-application:v1.0.0 
-    ports:
-      - "4200:4203"
-    networks:
-      local_network:
+#  wallet-driving-application:
+#    container_name: wallet-driving-application
+#    image: in2kizuna/wallet-driving-application:v1.0.0
+#    ports:
+#      - "4200:4203"
+#    networks:
+#      local_network:
 
   # wallet-creation-application:
   #   container_name: wallet-creation-application
@@ -30,22 +30,44 @@ services:
   #   networks:
   #     local_network:
 
-  # mysql:
-  #   container_name: mysql
-  #   image: mysql:8.0
-  #   command: "--default-authentication-plugin=mysql_native_password"
-  #   restart: always
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: "D83Wh$tb83D8"
-  #     MYSQL_DATABASE: "test"
-  #     MYSQL_USER: "user"
-  #     MYSQL_PASSWORD: "1234"
-  #   volumes:
-  #     - mysql_data:/var/lib/mysql
-  #   ports:
-  #     - "3306:3306"
-  #   networks:
-  #     local_network:
+  wallet-identity-provider:
+    container_name: wallet-identity-provider
+    image: quay.io/keycloak/keycloak:latest
+    ports:
+      - '8084:8084'
+    command:
+      - 'start-dev'
+      - '--import-realm'
+    environment:
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "1234"
+      KC_HTTP_PORT: "8084"
+      KC_DB: "postgres"
+      KC_DB_URL: "jdbc:postgresql://postgres/keycloak"
+      KC_DB_URL_PORT: "5433"
+      KC_DB_USERNAME: "user"
+      KC_DB_PASSWORD: "1234"
+    volumes:
+      - ./identity-service/imports:/opt/keycloak/data/import
+    links:
+      - postgres
+    networks:
+      local_network:
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: "keycloak"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "1234"
+    ports:
+      - '5433:5432'
+    restart: unless-stopped
+    networks:
+      local_network:
 
   wallet-user-registry:
     container_name: wallet-user-registry
@@ -83,42 +105,6 @@ services:
       - broker-adapter
     networks:
       local_network:
-      
-  wallet-crypto:
-    container_name: wallet-crypto
-    image: in2kizuna/wallet-crypto:v1.0.0-SNAPSHOT
-    environment:
-      SPRING_PROFILES_ACTIVE: "local-docker"
-      SERVER_PORT: "8081"
-      APP_URL_API: "http://wallet-crypto:8081"
-      WALLET_DATA_URL: "http://wallet-data:8086/api/dids"
-      VAULT_AUTHENTICATION: "token"
-      VAULT_TOKEN: ""
-      VAULT_HOST: "vault"
-      VAULT_SCHEME: "http"
-      VAULT_PORT: "8201"
-      VAULT_KV_ENABLED: "true"
-    command:
-      - run
-    ports:
-      - "8081:8081"
-    networks:
-      local_network:
-
-  wallet-api:
-    container_name: wallet-api
-    image: in2kizuna/wallet-api:v1.0.0-SNAPSHOT
-    environment:
-      SPRING_PROFILES_ACTIVE: "local-docker"
-      SERVER_PORT: "8088"
-      APP_URL_API: "http://wallet-api:8088"
-      WALLET_CREATION_APPLICATION_URL: "not implemented yet"
-    command:
-      - run
-    ports:
-      - "8088:8088"
-    networks:
-      local_network:
 
   broker-adapter:
     container_name: broker-adapter
@@ -152,61 +138,43 @@ services:
       - orion_db_config:/data/configdb
     networks:
       local_network:
-  
-  wallet-identity-provider:
-    container_name: wallet-identity-provider
-    image: quay.io/keycloak/keycloak:latest
-    ports:
-      - 8084:8084
-    command: 
-      - 'start-dev'
-      - '--import-realm'
-    environment:
-      KEYCLOAK_ADMIN: "admin"
-      KEYCLOAK_ADMIN_PASSWORD: "1234"
-      KC_HTTP_PORT: "8084"
-      KC_DB: "postgres"
-      KC_DB_URL: "jdbc:postgresql://postgres/keycloak"
-      KC_DB_URL_PORT: "5433"
-      KC_DB_USERNAME: "user"
-      KC_DB_PASSWORD: "1234"
-    volumes:
-      - ./identity-service/imports:/opt/keycloak/data/import
-    links:
-      - postgres
-    networks:
-      local_network:
 
-  postgres:
-    container_name: postgres
-    image: postgres:latest
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: "keycloak"
-      POSTGRES_USER: "user"
-      POSTGRES_PASSWORD: "1234"
-    ports:
-      - '5433:5433'
-    restart: unless-stopped
-    networks:
-      local_network:
+  #  wallet-crypto:
+  #    container_name: wallet-crypto
+  #    image: in2kizuna/wallet-crypto:v1.0.0-SNAPSHOT
+  #    environment:
+  #      SPRING_PROFILES_ACTIVE: "local-docker"
+  #      SERVER_PORT: "8081"
+  #      APP_URL_API: "http://wallet-crypto:8081"
+  #      WALLET_DATA_URL: "http://wallet-data:8086/api/dids"
+  #      VAULT_AUTHENTICATION: "token"
+  #      VAULT_TOKEN: ""
+  #      VAULT_HOST: "vault"
+  #      VAULT_SCHEME: "http"
+  #      VAULT_PORT: "8201"
+  #      VAULT_KV_ENABLED: "true"
+  #    command:
+  #      - run
+  #    ports:
+  #      - "8081:8081"
+  #    networks:
+  #      local_network:
 
-  vault:
-    image: hashicorp/vault:latest
-    container_name: vault
-    ports:
-      - "8201:8201"
-    volumes:
-      - VAULT_LOGS:/vault/logs
-      - VAULT_FILE:/vault/file
-      - ./vault/init.sh:/vault/init.sh
-      - ./vault/config.json:/vault/config/config.json
-    cap_add:
-      - IPC_LOCK
-    command: /bin/sh /vault/init.sh
-    networks:
-      local_network:
+#  vault:
+#    image: hashicorp/vault:latest
+#    container_name: vault
+#    ports:
+#      - "8201:8201"
+#    volumes:
+#      - VAULT_LOGS:/vault/logs
+#      - VAULT_FILE:/vault/file
+#      - ./vault/init.sh:/vault/init.sh
+#      - ./vault/config.json:/vault/config/config.json
+#    cap_add:
+#      - IPC_LOCK
+#    command: /bin/sh /vault/init.sh
+#    networks:
+#      local_network:
 
 networks:
   local_network:
