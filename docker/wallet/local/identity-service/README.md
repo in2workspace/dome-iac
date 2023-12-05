@@ -12,11 +12,16 @@ Keycloak's configuration has been customized to fit the specific needs of the Wa
 ## WalletIdP REALM Configuration
 For our Wallet application, we've set up a custom REALM named "WalletIdP". Below are the specific configurations of our REALM:
 
-### Client Configuration:
-- **Client Name:** wallet-client   
+### Client Register Configuration:
+- **Client Name:** user-registry-client   
 - **Client Secret:** fV51P8jFBo8VnFKMMuP3imw3H3i5mNck
 
-This client configuration is essential for the Wallet application to interact with Keycloak for authentication and authorization purposes.
+This client register configuration is essential for the Wallet application to interact with Keycloak new users registration purposes.
+
+### Client Login Configuration:
+- **Client Name:** auth-client   
+
+This client login configuration is essential for the Wallet application to interact with Keycloak for authentication and authorization purposes.
 
 ### Users configuration:
 
@@ -56,15 +61,15 @@ To retrieve a user's token in Keycloak via REST API, regardless of their role, u
 ```sh
 curl --location 'http://localhost:8084/realms/WalletIdP/protocol/openid-connect/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'client_id=wallet-client' \
+--data-urlencode 'client_id=auth-client' \
 --data-urlencode 'username=userWallet' \
 --data-urlencode 'password=userPass' \
---data-urlencode 'client_secret=fV51P8jFBo8VnFKMMuP3imw3H3i5mNck' \
---data-urlencode 'grant_type=password'
+--data-urlencode 'scope=openid profile email offline_access' \
+--data-urlencode 'grant_type=code'
 ```
 > Note: When communicating between Docker containers, instead of using `localhost`, you should use `wallet-identity-provider`, which is the name of the container. Adjust your requests accordingly if you're trying to communicate from a Docker environment.
 
 ## Version and Creation Date
-Version: 1.0.0
-Creation Date: October 19, 2023
+Version: 1.0.1
+Creation Date: December 05, 2023
 
