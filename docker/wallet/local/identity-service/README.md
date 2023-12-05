@@ -70,6 +70,6 @@ curl --location 'http://localhost:8084/realms/WalletIdP/protocol/openid-connect/
 > Note: When communicating between Docker containers, instead of using `localhost`, you should use `wallet-identity-provider`, which is the name of the container. Adjust your requests accordingly if you're trying to communicate from a Docker environment.
 
 ## Version and Creation Date
-Version: 1.0.1
+Version: 1.1.0
 Creation Date: December 05, 2023
 
