@@ -72,14 +72,14 @@ services:
 
   blockchain-connector:
     container_name: blockchain-connector
-#    image: in2kizuna/blockchain-connector:v2.0.0-SNAPSHOT
-    image: blockchain-connector:latest
+    image: in2kizuna/blockchain-connector:v2.0.0-SNAPSHOT
+#    image: blockchain-connector:latest
     environment:
       - "SPRING_R2DBC_URL=r2dbc:postgresql://mkt-postgres:5432/mktdb"
       - "SPRING_R2DBC_USERNAME=postgres"
       - "SPRING_R2DBC_PASSWORD=postgres"
       - "SPRING_FLYWAY_URL=jdbc:postgresql://mkt-postgres:5432/mktdb"
-      - "LOGGING_LEVEL_ES_IN2_BLOCKCHAINCONNECTOR=DEBUG"
+      - "LOGGING_LEVEL_ES_IN2_BLOCKCHAINCONNECTOR=INFO"
       - "OPENAPI_SERVER_URL=https://localhost:9091"
       - "OPENAPI_SERVER_DESCRIPTION=Blockchain Connector Test Server"
       - "OPENAPI_INFO_TITLE=Blockchain Connector"
