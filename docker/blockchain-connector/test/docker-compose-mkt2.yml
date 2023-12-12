@@ -43,7 +43,6 @@ services:
     volumes:
       - postgis-2:/var/lib/postgresql/data
 
-
   scorpio-2:
     image: scorpiobroker/all-in-one-runner:java-kafka-latest
     ports:
@@ -57,7 +56,6 @@ services:
 
   broker-adapter-2:
     image: in2kizuna/broker-adapter:v2.0.0-SNAPSHOT
-    #    image: broker-adapter:latest
     environment:
       - "LOGGING_LEVEL_ES_IN2_BROKERADAPTER=DEBUG"
       - "BROKER_EXTERNAL_DOMAIN=https://example.com/scorpio"

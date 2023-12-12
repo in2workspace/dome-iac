@@ -43,7 +43,6 @@ services:
     volumes:
       - postgis:/var/lib/postgresql/data
 
-
   scorpio:
     image: scorpiobroker/all-in-one-runner:java-kafka-latest
     ports:
@@ -58,7 +57,6 @@ services:
   broker-adapter:
     container_name: broker-adapter
     image: in2kizuna/broker-adapter:v2.0.0-SNAPSHOT
-#    image: broker-adapter:latest
     environment:
       - "LOGGING_LEVEL_ES_IN2_BROKERADAPTER=DEBUG"
       - "BROKER_EXTERNAL_DOMAIN=https://example.com/scorpio"
@@ -72,8 +70,7 @@ services:
 
   blockchain-connector:
     container_name: blockchain-connector
-#    image: in2kizuna/blockchain-connector:v2.0.0-SNAPSHOT
-    image: blockchain-connector:latest
+    image: in2kizuna/blockchain-connector:v2.0.0-SNAPSHOT
     environment:
       - "SPRING_R2DBC_URL=r2dbc:postgresql://mkt-postgres:5432/mktdb"
       - "SPRING_R2DBC_USERNAME=postgres"
