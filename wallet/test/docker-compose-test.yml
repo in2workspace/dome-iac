@@ -1,0 +1,256 @@
+version: '3.8'
+
+services:
+
+  wallet-identity-provider:
+    image: quay.io/keycloak/keycloak:latest
+    command:
+      - 'start-dev'
+      - '--import-realm'
+    environment:
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "1234"
+      KC_HTTP_PORT: "8080"
+      KC_DB: "postgres"
+      KC_DB_URL: "jdbc:postgresql://keycloak-postgres/keycloak"
+      KC_DB_URL_PORT: "5433"
+      KC_DB_USERNAME: "user"
+      KC_DB_PASSWORD: "1234"
+    ports:
+      - "9099:8080"
+    volumes:
+      - ./identity-provider/imports:/opt/keycloak/data/import
+    links:
+      - keycloak-postgres
+
+  keycloak-postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "keycloak"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "1234"
+    ports:
+      - '5433:5432'
+    volumes:
+      - keycloak-postgres-data:/var/lib/postgresql/data
+
+  wallet-driving-application:
+    image: in2kizuna/wallet-driving-application:v2.0.0-SNAPSHOT
+    ports:
+      - "4201:4200"
+
+  wallet-user-registry:
+    image: in2kizuna/wallet-user-registry:v2.0.0-SNAPSHOT
+    environment:
+      # Logging Configuration
+      LOGGING_LEVEL_ES_IN2_WALLETUSERREGISTRY: "DEBUG"
+      # OpenAPI Configuration
+      OPENAPI_SERVER_URL: "https://localhost:8085"
+      OPENAPI_SERVER_DESCRIPTION: "Blockchain Connector Test Server"
+      OPENAPI_INFO_TITLE: "Blockchain Connector"
+      OPENAPI_INFO_DESCRIPTION: "Blockchain Connector Component"
+      OPENAPI_INFO_VERSION: "2.0.0-SNAPSHOT"
+      OPENAPI_INFO_TERMS_OF_SERVICE: "https://example.com/terms"
+      OPENAPI_INFO_LICENSE_NAME: "Apache 2.0"
+      OPENAPI_INFO_LICENSE_URL: "https://www.apache.org/licenses/LICENSE-2.0.html"
+      OPENAPI_INFO_CONTACT_NAME: "IN2, Ingeniería de la Información"
+      OPENAPI_INFO_CONTACT_URL: "https://in2.es"
+      OPENAPI_INFO_CONTACT_EMAIL: "contacto@in2.es"
+      # Keycloak Configuration
+      KEYCLOAK_URL: "http://wallet-identity-provider:8080"
+      KEYCLOAK_REALM: "wallet"
+      KEYCLOAK_CLIENT-SECRET: "fV51P8jFBo8VnFKMMuP3imw3H3i5mNck"
+      KEYCLOAK_CLIENT-ID: "user-registry-client"
+      # Wallet Router Configuration
+      WALLET_DATA_URL: "http://wallet-data:8080"
+      WALLET_WDA_URL: "http://wallet-driving-application:4200"
+    ports:
+      - "8085:8080"
+
+  wallet-creation-application:
+    image: in2kizuna/wallet-creation-application:v2.0.0-SNAPSHOT
+    environment:
+      # Logging Configuration
+      LOGGING_LEVEL_ES_IN2_WALLETUSERREGISTRY: "DEBUG"
+      # OpenAPI Configuration
+      OPENAPI_SERVER_URL: "https://localhost:8081"
+      OPENAPI_SERVER_DESCRIPTION: "Blockchain Connector Test Server"
+      OPENAPI_INFO_TITLE: "Blockchain Connector"
+      OPENAPI_INFO_DESCRIPTION: "Blockchain Connector Component"
+      OPENAPI_INFO_VERSION: "2.0.0-SNAPSHOT"
+      OPENAPI_INFO_TERMS_OF_SERVICE: "https://example.com/terms"
+      OPENAPI_INFO_LICENSE_NAME: "Apache 2.0"
+      OPENAPI_INFO_LICENSE_URL: "https://www.apache.org/licenses/LICENSE-2.0.html"
+      OPENAPI_INFO_CONTACT_NAME: "IN2, Ingeniería de la Información"
+      OPENAPI_INFO_CONTACT_URL: "https://in2.es"
+      OPENAPI_INFO_CONTACT_EMAIL: "contacto@in2.es"
+      # Wallet Router Configuration
+      WALLET_DATA_URL: "http://wallet-data:8080"
+      WALLET_WDA_URL: "http://wallet-driving-application:4200"
+    ports:
+      - "8081:8080"
+
+  wallet-crypto:
+    image: in2kizuna/wallet-crypto:v2.0.0-SNAPSHOT
+    environment:
+      # Logging Configuration
+      LOGGING_LEVEL_ES_IN2_WALLET_CRYPTO: "DEBUG"
+      # OpenAPI Configuration
+      OPENAPI_SERVER_URL: "https://localhost:8087"
+      OPENAPI_SERVER_DESCRIPTION: "Blockchain Connector Test Server"
+      OPENAPI_INFO_TITLE: "Blockchain Connector"
+      OPENAPI_INFO_DESCRIPTION: "Blockchain Connector Component"
+      OPENAPI_INFO_VERSION: "2.0.0-SNAPSHOT"
+      OPENAPI_INFO_TERMS_OF_SERVICE: "https://example.com/terms"
+      OPENAPI_INFO_LICENSE_NAME: "Apache 2.0"
+      OPENAPI_INFO_LICENSE_URL: "https://www.apache.org/licenses/LICENSE-2.0.html"
+      OPENAPI_INFO_CONTACT_NAME: "IN2, Ingeniería de la Información"
+      OPENAPI_INFO_CONTACT_URL: "https://in2.es"
+      OPENAPI_INFO_CONTACT_EMAIL: "contacto@in2.es"
+      # Wallet Router Configuration
+      WALLET_DATA_URL: "http://wallet-data:8086/api/dids"
+      # Secret Provider Configuration
+      APP_SECRET_PROVIDER_NAME: "hashicorp"
+      # Vault Configuration
+      SPRING_CLOUD_VAULT_AUTHENTICATION: "token"
+      SPRING_CLOUD_VAULT_TOKEN: "hvs.PQ4jQzXeW4wzslbYKMWwimFY"
+      SPRING_CLOUD_VAULT_HOST: "vault"
+      SPRING_CLOUD_VAULT_SCHEME: "http"
+      SPRING_CLOUD_VAULT_PORT: "8201"
+      SPRING_CLOUD_VAULT_KV_ENABLED: "true"
+    ports:
+      - "8087:8081"
+
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault
+    ports:
+      - "8201:8201"
+    volumes:
+      - VAULT_LOGS:/vault/logs
+      - VAULT_FILE:/vault/file
+      - ./vault/init.sh:/vault/init.sh
+      - ./vault/config.json:/vault/config/config.json
+    cap_add:
+      - IPC_LOCK
+    command: /bin/sh /vault/init.sh
+
+  zookeeper:
+    image: zookeeper
+    ports:
+      - "2181"
+    logging:
+      driver: none
+    volumes:
+      - zookeeper-data:/data
+      - zookeeper-datalog:/datalog
+      - zookeeper-logs:/logs
+
+  kafka:
+    image: bitnami/kafka:3.5.1-debian-11-r6
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_LOG_RETENTION_MS: 10000
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 5000
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+    ports:
+      - "9092"
+    logging:
+      driver: none
+    links:
+      - zookeeper
+    volumes:
+      - kafka:/var/run/docker.sock
+
+  scorpio:
+    image: scorpiobroker/all-in-one-runner:java-kafka-latest
+    ports:
+      - "9090:9090"
+    environment:
+      DBHOST: scorpio-postgres
+      BUSHOST: kafka
+    links:
+      - scorpio-postgres
+      - kafka
+
+  scorpio-postgres:
+    image: postgis/postgis
+    environment:
+      POSTGRES_USER: ngb
+      POSTGRES_PASSWORD: ngb
+      POSTGRES_DB: ngb
+    logging:
+      driver: none
+    ports:
+      - "5434"
+    volumes:
+      - postgis-data:/var/lib/postgresql/data
+
+  broker-adapter:
+    image: in2kizuna/broker-adapter:v2.0.0-SNAPSHOT
+    environment:
+      # Logging Configuration
+      LOGGING_LEVEL_ES_IN2_BROKERADAPTER: "DEBUG"
+      # OpenAPI Configuration
+      OPENAPI_SERVER_URL: "https://localhost:8087"
+      OPENAPI_SERVER_DESCRIPTION: "Blockchain Connector Test Server"
+      OPENAPI_INFO_TITLE: "Blockchain Connector"
+      OPENAPI_INFO_DESCRIPTION: "Blockchain Connector Component"
+      OPENAPI_INFO_VERSION: "2.0.0-SNAPSHOT"
+      OPENAPI_INFO_TERMS_OF_SERVICE: "https://example.com/terms"
+      OPENAPI_INFO_LICENSE_NAME: "Apache 2.0"
+      OPENAPI_INFO_LICENSE_URL: "https://www.apache.org/licenses/LICENSE-2.0.html"
+      OPENAPI_INFO_CONTACT_NAME: "IN2, Ingeniería de la Información"
+      OPENAPI_INFO_CONTACT_URL: "https://in2.es"
+      OPENAPI_INFO_CONTACT_EMAIL: "contacto@in2.es"
+      # Application Configuration
+      APP_CONTEXT_ENABLED: "false"
+      # Broker Configuration
+      BROKER_EXTERNAL_DOMAIN: "https://example.com/scorpio"
+      BROKER_INTERNAL_DOMAIN: "http://scorpio:9090"
+      BROKER_PATHS_ENTITIES: "/ngsi-ld/v1/entities"
+      BROKER_PATHS_SUBSCRIPTIONS: "/ngsi-ld/v1/subscriptions"
+    ports:
+      - "9091:8080"
+    links:
+      - scorpio
+
+  wallet-data:
+    image: in2kizuna/wallet-data:v2.0.0-SNAPSHOT
+    environment:
+      # Logging Configuration
+      LOGGING_LEVEL_ES_IN2_WALLET_DATA_API_SERVICE: "DEBUG"
+      # OpenAPI Configuration
+      OPENAPI_SERVER_URL: "https://localhost:8086"
+      OPENAPI_SERVER_DESCRIPTION: "Blockchain Connector Test Server"
+      OPENAPI_INFO_TITLE: "Blockchain Connector"
+      OPENAPI_INFO_DESCRIPTION: "Blockchain Connector Component"
+      OPENAPI_INFO_VERSION: "2.0.0-SNAPSHOT"
+      OPENAPI_INFO_TERMS_OF_SERVICE: "https://example.com/terms"
+      OPENAPI_INFO_LICENSE_NAME: "Apache 2.0"
+      OPENAPI_INFO_LICENSE_URL: "https://www.apache.org/licenses/LICENSE-2.0.html"
+      OPENAPI_INFO_CONTACT_NAME: "IN2, Ingeniería de la Información"
+      OPENAPI_INFO_CONTACT_URL: "https://in2.es"
+      OPENAPI_INFO_CONTACT_EMAIL: "contacto@in2.es"
+      # Wallet Router Configuration
+      BROKER-ADAPTER_URL: "http://broker-adapter:8080"
+      WALLET-CRYPTO_URL: "http://wallet-crypto:8080"
+      WALLET-WDA_URL: "http://wallet-driving-application:4200"
+    ports:
+      - "8086:8080"
+    links:
+      - broker-adapter
+
+volumes:
+  keycloak-postgres-data:
+  VAULT_LOGS:
+  VAULT_FILE:
+  zookeeper-data:
+  zookeeper-datalog:
+  zookeeper-logs:
+  kafka:
+  postgis-data:
+
