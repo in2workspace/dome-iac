@@ -148,8 +148,8 @@ services:
       - zookeeper-logs:/logs
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "2181"]
-      interval: 10s
-      timeout: 5s
+      interval: 20s
+      timeout: 10s
       retries: 5
 
   kafka:
@@ -184,7 +184,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9090/health"]
       interval: 30s
-      timeout: 10s
+      timeout: 15s
       retries: 5
 
   scorpio-postgres:
@@ -201,8 +201,8 @@ services:
       - postgis-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ngb -d ngb"]
-      interval: 10s
-      timeout: 5s
+      interval: 20s
+      timeout: 10s
       retries: 5
 
   broker-adapter:
