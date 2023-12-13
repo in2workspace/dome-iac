@@ -10,14 +10,14 @@ services:
     environment:
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "1234"
-      KC_HTTP_PORT: "8080"
+      KC_HTTP_PORT: "9099"
       KC_DB: "postgres"
       KC_DB_URL: "jdbc:postgresql://keycloak-postgres/keycloak"
       KC_DB_URL_PORT: "5433"
       KC_DB_USERNAME: "user"
       KC_DB_PASSWORD: "1234"
     ports:
-      - "9099:8080"
+      - "9099:9099"
     volumes:
       - ./identity-provider/imports:/opt/keycloak/data/import
     links:
@@ -38,7 +38,7 @@ services:
   wallet-driving-application:
     image: in2kizuna/wallet-driving-application:v2.0.0-SNAPSHOT
     ports:
-      - "4201:4200"
+      - "4200:4200"
 
   wallet-user-registry:
     image: in2kizuna/wallet-user-registry:v2.0.0-SNAPSHOT
@@ -58,13 +58,13 @@ services:
       OPENAPI_INFO_CONTACT_URL: "https://in2.es"
       OPENAPI_INFO_CONTACT_EMAIL: "contacto@in2.es"
       # Keycloak Configuration
-      KEYCLOAK_URL: "http://wallet-identity-provider:8080"
+      KEYCLOAK_URL: "http://wallet-identity-provider:9099"
       KEYCLOAK_REALM: "wallet"
       KEYCLOAK_CLIENT-SECRET: "fV51P8jFBo8VnFKMMuP3imw3H3i5mNck"
       KEYCLOAK_CLIENT-ID: "user-registry-client"
       # Wallet Router Configuration
       WALLET_DATA_URL: "http://wallet-data:8080"
-      WALLET_WDA_URL: "http://wallet-driving-application:4200"
+      WALLET_WDA_URL: "http://localhost:4200"
     ports:
       - "8085:8080"
 
@@ -87,7 +87,7 @@ services:
       OPENAPI_INFO_CONTACT_EMAIL: "contacto@in2.es"
       # Wallet Router Configuration
       WALLET_DATA_URL: "http://wallet-data:8080"
-      WALLET_WDA_URL: "http://wallet-driving-application:4200"
+      WALLET_WDA_URL: "http://localhost:4200"
     ports:
       - "8081:8080"
 
@@ -238,7 +238,7 @@ services:
       # Wallet Router Configuration
       BROKER-ADAPTER_URL: "http://broker-adapter:8080"
       WALLET-CRYPTO_URL: "http://wallet-crypto:8080"
-      WALLET-WDA_URL: "http://wallet-driving-application:4200"
+      WALLET-WDA_URL: "http://localhost:4200"
     ports:
       - "8086:8080"
     links:
@@ -253,4 +253,3 @@ volumes:
   zookeeper-logs:
   kafka:
   postgis-data:
-
