@@ -120,7 +120,7 @@ services:
       SPRING_CLOUD_VAULT_PORT: "8201"
       SPRING_CLOUD_VAULT_KV_ENABLED: "true"
     ports:
-      - "8087:8081"
+      - "8087:8080"
 
   vault:
     image: hashicorp/vault:latest
