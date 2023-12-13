@@ -146,9 +146,17 @@ services:
       - zookeeper-data:/data
       - zookeeper-datalog:/datalog
       - zookeeper-logs:/logs
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   kafka:
     image: bitnami/kafka:3.5.1-debian-11-r6
+    depends_on:
+      zookeeper:
+        condition: service_healthy
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -160,21 +168,24 @@ services:
       - "9092"
     logging:
       driver: none
-    links:
-      - zookeeper
     volumes:
       - kafka:/var/run/docker.sock
 
   scorpio:
     image: scorpiobroker/all-in-one-runner:java-kafka-latest
+    depends_on:
+    - scorpio-postgres
+    - kafka
     ports:
       - "9090:9090"
     environment:
       DBHOST: scorpio-postgres
       BUSHOST: kafka
-    links:
-      - scorpio-postgres
-      - kafka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   scorpio-postgres:
     image: postgis/postgis
@@ -188,6 +199,11 @@ services:
       - "5434"
     volumes:
       - postgis-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ngb -d ngb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   broker-adapter:
     image: in2kizuna/broker-adapter:v2.0.0-SNAPSHOT
