@@ -88,6 +88,7 @@ services:
       # Wallet Router Configuration
       WALLET_DATA_URL: "http://wallet-data:8080"
       WALLET_WDA_URL: "http://localhost:4200"
+      WALLET_CRYPTO_URL: "http://wallet-crypto:8080"
     ports:
       - "8081:8080"
 
@@ -109,12 +110,12 @@ services:
       OPENAPI_INFO_CONTACT_URL: "https://in2.es"
       OPENAPI_INFO_CONTACT_EMAIL: "contacto@in2.es"
       # Wallet Router Configuration
-      WALLET_DATA_URL: "http://wallet-data:8086/api/dids"
+      WALLET_DATA_URL: "http://wallet-data:8080/api/v2/dids"
       # Secret Provider Configuration
       APP_SECRET_PROVIDER_NAME: "hashicorp"
       # Vault Configuration
       SPRING_CLOUD_VAULT_AUTHENTICATION: "token"
-      SPRING_CLOUD_VAULT_TOKEN: "hvs.PQ4jQzXeW4wzslbYKMWwimFY"
+      SPRING_CLOUD_VAULT_TOKEN: "hvs.Ak2abMvVjpEOq8kNH9kPWE08"
       SPRING_CLOUD_VAULT_HOST: "vault"
       SPRING_CLOUD_VAULT_SCHEME: "http"
       SPRING_CLOUD_VAULT_PORT: "8201"
@@ -211,7 +212,7 @@ services:
       # Logging Configuration
       LOGGING_LEVEL_ES_IN2_BROKERADAPTER: "DEBUG"
       # OpenAPI Configuration
-      OPENAPI_SERVER_URL: "https://localhost:8087"
+      OPENAPI_SERVER_URL: "https://localhost:9091"
       OPENAPI_SERVER_DESCRIPTION: "Blockchain Connector Test Server"
       OPENAPI_INFO_TITLE: "Blockchain Connector"
       OPENAPI_INFO_DESCRIPTION: "Blockchain Connector Component"
