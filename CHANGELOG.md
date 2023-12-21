@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - 2023-12-21
 ### Added
+
 - Introduction of two operational profiles: Test and Production.
 - Test profile uses Docker images tagged with 'snapshot' for non-production testing.
 - Production profile uses Docker images without 'snapshot' tag for production use.
@@ -14,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Docker Compose configurations for deploying Marketplace1 and Marketplace2 in production environment.
 
 ### Changed
+
 - Updated the Wallet Docker build process to include prerequisite steps involving Identity Provider and Vault READMEs.
 - Modified the version and modification date in all README documents to reflect the latest updates.
 
