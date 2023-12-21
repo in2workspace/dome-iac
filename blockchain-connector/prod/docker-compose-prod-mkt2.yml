@@ -55,7 +55,7 @@ services:
       - kafka-2
 
   broker-adapter-2:
-    image: in2kizuna/broker-adapter:v2.0.0-SNAPSHOT
+    image: in2kizuna/broker-adapter:v2.0.0
     environment:
       - "LOGGING_LEVEL_ES_IN2_BROKERADAPTER=DEBUG"
       - "BROKER_EXTERNAL_DOMAIN=https://example.com/scorpio"
@@ -68,8 +68,7 @@ services:
       - scorpio-2
 
   blockchain-connector-2:
-    image: in2kizuna/blockchain-connector:v2.0.0-SNAPSHOT
-    #    image: blockchain-connector:latest
+    image: in2kizuna/blockchain-connector:v2.0.0
     environment:
       - "SPRING_R2DBC_URL=r2dbc:postgresql://mkt-postgres-2:5432/mktdb"
       - "SPRING_R2DBC_USERNAME=postgres"

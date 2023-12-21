@@ -10,7 +10,7 @@ In this context, Keycloak serves the role of centralizing and standardizing user
 Keycloak's configuration has been customized to fit the specific needs of the Wallet application. This customization is carried out through a Realm, a configuration that defines how users are authenticated and authorized and what resources they have available.
 
 ## WalletIdP REALM Configuration
-For our Wallet application, we've set up a custom REALM named "WalletIdP". Below are the specific configurations of our REALM:
+For our Wallet application, we've set up a custom REALM named "wallet". Below are the specific configurations of our REALM:
 
 ### Client Register Configuration:
 - **Client Name:** user-registry-client   
@@ -25,7 +25,7 @@ This client login configuration is essential for the Wallet application to inter
 
 ### Users configuration:
 
-These are the initial users available in the WalletIdP realm:
+These are the initial users available in the wallet realm:
 
 - **User: adminWallet**
   - **Role:** Admin
@@ -44,12 +44,12 @@ These are the initial users available in the WalletIdP realm:
 1. Start by setting up your local environment.
 2. Navigate to the docker/wallet directory.
 3. Follow the instructions in the README file to set up your local environment.
-4. Once your environment is up and running, visit the following URL: (http://localhost:8084/admin/WalletIdP/console/)
+4. Once your environment is up and running, visit the following URL: (http://localhost:8084/admin/wallet/console/)
 5. Log in using the following credentials:
     - **Username:** adminWallet
     - **Password:** adminPass 
 
-> Note: If you prefer to log in with the Keycloak admin rather than the wallet admin, visit the following URL: [http://localhost:8084/admin/master/console/](http://localhost:8084/admin/master/console/). However, keep in mind that this 'admin' user is not part of the WalletIdP application but belongs to the Master application. To access with the Keycloak admin use this credentials:
+> Note: If you prefer to log in with the Keycloak admin rather than the wallet admin, visit the following URL: [http://localhost:8084/admin/master/console/](http://localhost:8084/admin/master/console/). However, keep in mind that this 'admin' user is not part of the wallet application but belongs to the Master application. To access with the Keycloak admin use this credentials:
     **Username:** adminWallet
     **Password:** adminPass 
 
@@ -59,7 +59,7 @@ These are the initial users available in the WalletIdP realm:
 To retrieve a user's token in Keycloak via REST API, regardless of their role, use the following endpoint and parameters. Here's a practical example using curl to obtain the token for userWallet:
 
 ```sh
-curl --location 'http://localhost:8084/realms/WalletIdP/protocol/openid-connect/token' \
+curl --location 'http://localhost:8084/realms/wallet/protocol/openid-connect/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'client_id=auth-client' \
 --data-urlencode 'username=userWallet' \
