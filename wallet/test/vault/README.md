@@ -10,7 +10,7 @@ The goal is to integrate Vault to securely handle private keys, facilitating sec
 1. Starting the Vault Service
 - First, start only the Vault service:
 ```sh
-docker-compose up -d vault
+docker-compose -f docker-compose-test.yml up -d vault
 ```
 2. Accessing the Vault Container
 - Open your terminal and access the Vault
@@ -33,13 +33,6 @@ cat root_token.txt
 - Open your docker-compose.yaml file on docker/wallet/local.
 - Locate the service configuration for wallet-crypto.
 - And paste the token into the VAULT_TOKEN enviroment variable and save your changes.
-
-5. Launching Remaining Services
-- After updating the docker-compose.yml file, start the rest of the services:
-```sh
-docker-compose up -d
-```
-This will bring up all services, including the wallet-crypto service with the new Vault token configuration.
 
 ## Conclusion
 You have successfully retrieved the Vault token and configured it for the Wallet-Crypto service in your local Docker environment. This token is crucial for enabling secure interactions with the Vault for key management during development.
