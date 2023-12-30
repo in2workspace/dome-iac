@@ -1,6 +1,0 @@
-# App Configuration
-broker:
-  domain: http://provider-orionld:1026
-  paths:
-    entities: /ngsi-ld/v1/entities
-    subscriptions: /ngsi-ld/v1/subscriptions
