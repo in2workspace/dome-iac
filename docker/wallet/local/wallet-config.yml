@@ -1,6 +1,0 @@
-# App Configuration
-broker:
-  internalDomain: http://orion-ld:1026
-broker-adapter:
-  openapi:
-    url: http://broker-adapter:8080
