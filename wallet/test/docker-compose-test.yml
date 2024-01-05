@@ -86,6 +86,8 @@ services:
       OPENAPI_INFO_CONTACT_URL: "https://in2.es"
       OPENAPI_INFO_CONTACT_EMAIL: "contacto@in2.es"
       # Wallet Router Configuration
+      AUTH-SERVER_DOMAIN: "https://issuerkeycloak.demo.in2.es/realms/EAAProvider"
+      AUTH-SERVER_TOKEN-ENDPOINT: "https://issuerkeycloak.demo.in2.es/realms/EAAProvider/verifiable-credential/did:key:z6MkqmaCT2JqdUtLeKah7tEVfNXtDXtQyj4yxEgV11Y5CqUa/token"
       WALLET_DATA_URL: "http://wallet-data:8080"
       WALLET_WDA_URL: "http://localhost:4200"
       WALLET_CRYPTO_URL: "http://wallet-crypto:8080"
