@@ -38,8 +38,17 @@ services:
   wallet-driving-application:
     image: in2kizuna/wallet-driving-application:v2.0.0-SNAPSHOT
     ports:
-      - "4200:4200"
-
+      - "4200:8088"
+    environment:
+      - WCA_URL=http://localhost:8086
+      - DATA_URL=http://localhost:8081
+      - LOGIN_URL=http://localhost:9099/realms/wallet
+      - REGISTER_URL=http://localhost:8085
+      - EXECCONT_URI=/api/v2/execute-content
+      - VP_URL=/api/v2/verifiable-presentation
+      - CRED_URI=/api/v2/credentials
+      - CREDID_URI=/api/v2/credentials?credentialId=
+      - USER_URI=/api/v2/users
   wallet-user-registry:
     image: in2kizuna/wallet-user-registry:v2.0.0-SNAPSHOT
     environment:
