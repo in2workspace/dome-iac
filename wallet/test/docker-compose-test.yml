@@ -40,8 +40,8 @@ services:
     ports:
       - "4200:8088"
     environment:
-      - WCA_URL=http://localhost:8086
-      - DATA_URL=http://localhost:8081
+      - WCA_URL=http://localhost:8081
+      - DATA_URL=http://localhost:8086
       - LOGIN_URL=http://localhost:9099/realms/wallet
       - REGISTER_URL=http://localhost:8085
       - EXECCONT_URI=/api/v2/execute-content
