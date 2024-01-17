@@ -38,7 +38,7 @@ services:
   wallet-driving-application:
     image: in2kizuna/wallet-driving-application:v2.0.0
     ports:
-      - "4200:80"
+      - "4200:8088"
 
   wallet-user-registry:
     image: in2kizuna/wallet-user-registry:v2.0.0
