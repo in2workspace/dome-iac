@@ -63,6 +63,8 @@ services:
       - "BROKER_INTERNAL_DOMAIN=http://scorpio:9090"
       - "BROKER_PATHS_ENTITIES=/ngsi-ld/v1/entities"
       - "BROKER_PATHS_SUBSCRIPTIONS=/ngsi-ld/v1/subscriptions"
+      - "NGSI_SUBSCRIPTION_NOTIFICATION_ENDPOINT=http://blockchain-connector:8080/notifications/broker"
+      - "NGSI_SUBSCRIPTION_ENTITY_TYPES=ProductOffering,ProductOrder"
     ports:
       - "9093:8080"
     depends_on:
@@ -97,8 +99,6 @@ services:
       - "BLOCKCHAIN_SUBSCRIPTION_EVENT_TYPES=ProductOffering,ProductOrder"
       - "BROKER_EXTERNAL_DOMAIN=https://example.com/scorpio"
       - "BROKER_INTERNAL_DOMAIN=http://scorpio:9090"
-      - "NGSI_SUBSCRIPTION_NOTIFICATION_ENDPOINT=http://blockchain-connector:8080/notifications/broker"
-      - "NGSI_SUBSCRIPTION_ENTITY_TYPES=ProductOffering,ProductOrder"
       - "BROKER_ADAPTER_DOMAIN=http://broker-adapter:8080"
       - "BROKER_ADAPTER_PATHS_ENTITIES=/api/v2/entities"
       - "BROKER_ADAPTER_PATHS_SUBSCRIPTIONS=/api/v2/subscriptions"
