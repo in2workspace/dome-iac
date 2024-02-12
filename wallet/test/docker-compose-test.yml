@@ -49,7 +49,9 @@ services:
       - CRED_URI=/api/v2/credentials
       - CREDID_URI=/api/v2/credentials?credentialId=
       - USER_URI=/api/v2/users
-
+      - WEBSOCKET_URL:ws://localhost:8081
+      - WEBSOCKET_URI:/api/v2/pin
+      
   wallet-user-registry:
     image: in2kizuna/wallet-user-registry:v2.0.0-SNAPSHOT
     environment:
