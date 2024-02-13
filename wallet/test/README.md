@@ -15,7 +15,6 @@ Before proceeding with building and deploying the Docker containers for the wall
 
 Once you have completed the above steps, you can proceed with building and deploying the wallet application.
 
-
 ## Build
 
 Go to the root directory of the project and run the following command:
