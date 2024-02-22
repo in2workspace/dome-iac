@@ -40,11 +40,11 @@ services:
     ports:
       - "4200:8088"
     environment:
-      - WCA_URL=http://localhost:8080
-      - DATA_URL=http://localhost:8080
-      - LOGIN_URL=http://localhost:9099/realms/wallet
+      - SERVER_URL=http://localhost:8080
+      - IAM_URL=http://localhost:9099
+      - IAM_URI=/realms/wallet
       - EXECCONT_URI=/api/v2/execute-content
-      - VP_URL=/api/v2/verifiable-presentation
+      - VP_URI=/api/v2/verifiable-presentation
       - CRED_URI=/api/v2/credentials
       - CREDID_URI=/api/v2/credentials?credentialId=
       - USER_URI=/api/v2/users
