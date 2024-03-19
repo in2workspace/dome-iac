@@ -52,7 +52,7 @@ services:
       - WEBSOCKET_URI=/api/v2/pin
 
   wallet-server:
-    image: in2kizuna/wallet-server:v1.0.0-SNAPSHOT
+    image: in2kizuna/wallet-server:v1.1.0-SNAPSHOT
     environment:
       # Logging Configuration
       LOGGING_LEVEL_ES_IN2_WALLET_SERVER: "DEBUG"
@@ -81,17 +81,15 @@ services:
       IDENTITY_PROVIDER_PASSWORD: "adminPass"
       #BROKER
       BROKER_PROVIDER: "scorpio"
-      BROKER_EXTERNALDOMAIN: "http://scorpio:9090"
-      BROKER_INTERNALDOMAIN: "http://scorpiot:9090"
+      BROKER_EXTERNAL-URL_DOMAIN: "scorpio"
+      BROKER_INTERNAL-URL_DOMAIN: "scorpio"
       BROKER_PATHS_ENTITIES: "/ngsi-ld/v1/entities"
       # VAULT
       VAULT_PROVIDER_NAME: "hashicorp"
-      SPRING_CLOUD_VAULT_AUTHENTICATION: "token"
-      SPRING_CLOUD_VAULT_TOKEN: ""
-      SPRING_CLOUD_VAULT_HOST: "vault"
-      SPRING_CLOUD_VAULT_SCHEME: "http"
-      SPRING_CLOUD_VAULT_PORT: "8201"
-      SPRING_CLOUD_VAULT_KV_ENABLED: "true"
+      HASHICORP_VAULT_HOST: "vault"
+      HASHICORP_VAULT_TOKEN: "hvs.cvkSZ1qirXWnLvFyugyKbSsT"
+      HASHICORP_VAULT_SCHEME: "http"
+      HASHICORP_VAULT_PORT: "8201"
     ports:
       - "8080:8080"
 
