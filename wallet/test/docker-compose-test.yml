@@ -81,13 +81,13 @@ services:
       IDENTITY_PROVIDER_PASSWORD: "adminPass"
       #BROKER
       BROKER_PROVIDER: "scorpio"
-      BROKER_EXTERNAL-URL_DOMAIN: "scorpio"
-      BROKER_INTERNAL-URL_DOMAIN: "scorpio"
+      BROKER_EXTERNAL_URL_DOMAIN: "scorpio"
+      BROKER_INTERNAL_URL_DOMAIN: "scorpio"
       BROKER_PATHS_ENTITIES: "/ngsi-ld/v1/entities"
       # VAULT
       VAULT_PROVIDER_NAME: "hashicorp"
       HASHICORP_VAULT_HOST: "vault"
-      HASHICORP_VAULT_TOKEN: 
+      HASHICORP_VAULT_TOKEN: ""
       HASHICORP_VAULT_SCHEME: "http"
       HASHICORP_VAULT_PORT: "8201"
     ports:
