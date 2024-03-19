@@ -87,7 +87,7 @@ services:
       # VAULT
       VAULT_PROVIDER_NAME: "hashicorp"
       HASHICORP_VAULT_HOST: "vault"
-      HASHICORP_VAULT_TOKEN: ""
+      HASHICORP_VAULT_TOKEN: 
       HASHICORP_VAULT_SCHEME: "http"
       HASHICORP_VAULT_PORT: "8201"
     ports:
