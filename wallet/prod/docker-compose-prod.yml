@@ -52,7 +52,7 @@ services:
       - WEBSOCKET_URI=/api/v2/pin
 
   wallet-server:
-    image: in2kizuna/wallet-server:v1.1.0-SNAPSHOT
+    image: in2kizuna/wallet-server:v1.1.0
     environment:
       # Logging Configuration
       LOGGING_LEVEL_ES_IN2_WALLET_SERVER: "DEBUG"
@@ -87,7 +87,7 @@ services:
       # VAULT
       VAULT_PROVIDER_NAME: "hashicorp"
       HASHICORP_VAULT_HOST: "vault"
-      HASHICORP_VAULT_TOKEN: "hvs.cvkSZ1qirXWnLvFyugyKbSsT"
+      HASHICORP_VAULT_TOKEN: ""
       HASHICORP_VAULT_SCHEME: "http"
       HASHICORP_VAULT_PORT: "8201"
     ports:
