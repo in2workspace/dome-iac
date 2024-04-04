@@ -36,23 +36,23 @@ services:
       - keycloak-postgres-data:/var/lib/postgresql/data
 
   wallet-driving-application:
-    image: in2kizuna/wallet-driving-application:v1.0.0
+    image: in2kizuna/wallet-driving-application:v1.1.0-SNAPSHOT
     ports:
       - "4200:8088"
     environment:
       - SERVER_URL=http://localhost:8080
       - IAM_URL=http://localhost:9099
       - IAM_URI=/realms/wallet
-      - EXECCONT_URI=/api/v2/execute-content
-      - VP_URI=/api/v2/verifiable-presentation
-      - CRED_URI=/api/v2/credentials
-      - CREDID_URI=/api/v2/credentials?credentialId=
-      - USER_URI=/api/v2/users
+      - EXECCONT_URI=/api/v1/execute-content
+      - VP_URI=/api/v1/vp
+      - CRED_URI=/api/v1/credentials
+      - CREDID_URI=/api/v1/credentials?credentialId=
+      - USER_URI=/api/v1/users
       - WEBSOCKET_URL=ws://localhost:8080
-      - WEBSOCKET_URI=/api/v2/pin
+      - WEBSOCKET_URI=/api/v1/pin
 
   wallet-server:
-    image: in2kizuna/wallet-server:v1.1.0-SNAPSHOT
+    image: wallet-server
     environment:
       # Logging Configuration
       LOGGING_LEVEL_ES_IN2_WALLET_SERVER: "DEBUG"
@@ -70,26 +70,25 @@ services:
       OPENAPI_INFO_CONTACT_EMAIL: "contacto@in2.es"
       # CORS
       WALLET_WDA_URL: "http://localhost:4200"
-      # RETROCOMPATIBILITY
-      AUTH_SERVER_DOMAIN: "https://issuerkeycloak.demo.in2.es/realms/EAAProvider"
-      AUTH_SERVER_TOKEN_ENDPOINT: "https://issuerkeycloak.demo.in2.es/realms/EAAProvider/verifiable-credential/did:key:z6MkqmaCT2JqdUtLeKah7tEVfNXtDXtQyj4yxEgV11Y5CqUa/token"
+      #BROKER
+      BROKER_PROVIDER: "scorpio"
+      BROKER_EXTERNAL_URL_DOMAIN: "scorpio"
+      BROKER_INTERNAL_URL_DOMAIN: "scorpio"
+      BROKER_PATHS_ENTITIES: "/ngsi-ld/v1/entities"
       #IDP
       IDENTITY_PROVIDER_URL: "http://wallet-identity-provider:9099/realms/wallet/protocol/openid-connect/token"
       IDENTITY_PROVIDER_CLIENT_SECRET: "fV51P8jFBo8VnFKMMuP3imw3H3i5mNck"
       IDENTITY_PROVIDER_CLIENT_ID: "user-registry-client"
       IDENTITY_PROVIDER_USERNAME: "adminWallet"
       IDENTITY_PROVIDER_PASSWORD: "adminPass"
-      #BROKER
-      BROKER_PROVIDER: "scorpio"
-      BROKER_EXTERNAL_URL_DOMAIN: "scorpio"
-      BROKER_INTERNAL_URL_DOMAIN: "scorpio"
-      BROKER_PATHS_ENTITIES: "/ngsi-ld/v1/entities"
       # VAULT
       VAULT_PROVIDER_NAME: "hashicorp"
       HASHICORP_VAULT_HOST: "vault"
-      HASHICORP_VAULT_TOKEN: ""
+      HASHICORP_VAULT_TOKEN: "hvs.60TonjabQzUoOPF3HTqIPLnV"
       HASHICORP_VAULT_SCHEME: "http"
       HASHICORP_VAULT_PORT: "8201"
+      SERVER_PORT: "8080"
+
     ports:
       - "8080:8080"
 

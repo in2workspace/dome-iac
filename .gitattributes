@@ -1,3 +1,1 @@
-# Custom for specific files
-# Example: Force LF line endings in shell script files
 *.sh text eol=lf
