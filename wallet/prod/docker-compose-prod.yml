@@ -36,7 +36,7 @@ services:
       - keycloak-postgres-data:/var/lib/postgresql/data
 
   wallet-driving-application:
-    image: in2kizuna/wallet-driving-application:v1.1.0-SNAPSHOT
+    image: in2kizuna/wallet-driving-application:v1.0.0
     ports:
       - "4200:8088"
     environment:
@@ -50,9 +50,10 @@ services:
       - USER_URI=/api/v1/users
       - WEBSOCKET_URL=ws://localhost:8080
       - WEBSOCKET_URI=/api/v1/pin
+      - REQCRED_URI=/api/v1/request-credential
 
   wallet-server:
-    image: wallet-server
+    image: in2kizuna/wallet-server:v1.1.1
     environment:
       # Logging Configuration
       LOGGING_LEVEL_ES_IN2_WALLET_SERVER: "DEBUG"
@@ -61,7 +62,7 @@ services:
       OPENAPI_SERVER_DESCRIPTION: "Wallet Server"
       OPENAPI_INFO_TITLE: "Wallet Server"
       OPENAPI_INFO_DESCRIPTION: "Wallet Server Component"
-      OPENAPI_INFO_VERSION: "1.1.0"
+      OPENAPI_INFO_VERSION: "1.1.2"
       OPENAPI_INFO_TERMS_OF_SERVICE: "https://example.com/terms"
       OPENAPI_INFO_LICENSE_NAME: "Apache 2.0"
       OPENAPI_INFO_LICENSE_URL: "https://www.apache.org/licenses/LICENSE-2.0.html"
@@ -77,18 +78,17 @@ services:
       BROKER_PATHS_ENTITIES: "/ngsi-ld/v1/entities"
       #IDP
       IDENTITY_PROVIDER_URL: "http://wallet-identity-provider:9099/realms/wallet/protocol/openid-connect/token"
-      IDENTITY_PROVIDER_CLIENT_SECRET: "fV51P8jFBo8VnFKMMuP3imw3H3i5mNck"
+      IDENTITY_PROVIDER_CLIENT_SECRET: "ZlY1MVA4akZCbzhWbkZLTU11UDNpbXczSDNpNW1OY2s"
       IDENTITY_PROVIDER_CLIENT_ID: "user-registry-client"
       IDENTITY_PROVIDER_USERNAME: "adminWallet"
       IDENTITY_PROVIDER_PASSWORD: "adminPass"
       # VAULT
       VAULT_PROVIDER_NAME: "hashicorp"
       HASHICORP_VAULT_HOST: "vault"
-      HASHICORP_VAULT_TOKEN: "hvs.60TonjabQzUoOPF3HTqIPLnV"
+      HASHICORP_VAULT_TOKEN: ""
       HASHICORP_VAULT_SCHEME: "http"
       HASHICORP_VAULT_PORT: "8201"
       SERVER_PORT: "8080"
-
     ports:
       - "8080:8080"
 
