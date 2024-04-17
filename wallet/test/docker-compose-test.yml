@@ -36,23 +36,24 @@ services:
       - keycloak-postgres-data:/var/lib/postgresql/data
 
   wallet-driving-application:
-    image: in2kizuna/wallet-driving-application:v1.0.0-SNAPSHOT
+    image: in2kizuna/wallet-driving-application:v1.1.1-SNAPSHOT
     ports:
       - "4200:8088"
     environment:
       - WCA_URL=http://localhost:8080
       - DATA_URL=http://localhost:8080
       - LOGIN_URL=http://localhost:9099/realms/wallet
-      - EXECCONT_URI=/api/v2/execute-content
-      - VP_URL=/api/v2/verifiable-presentation
-      - CRED_URI=/api/v2/credentials
-      - CREDID_URI=/api/v2/credentials?credentialId=
-      - USER_URI=/api/v2/users
+      - EXECCONT_URI=/api/v1/execute-content
+      - VP_URL=/api/v1/verifiable-presentation
+      - CRED_URI=/api/v1/credentials
+      - CREDID_URI=/api/v1/credentials?credentialId=
+      - USER_URI=/api/v1/users
       - WEBSOCKET_URL=ws://localhost:8080
-      - WEBSOCKET_URI=/api/v2/pin
+      - WEBSOCKET_URI=/api/v1/pin
+      - REQCRED_URI=/api/v1/request-credential
 
   wallet-server:
-    image: in2kizuna/wallet-server:v1.1.0-SNAPSHOT
+    image: in2kizuna/wallet-server:v1.1.2-SNAPSHOT
     environment:
       # Logging Configuration
       LOGGING_LEVEL_ES_IN2_WALLET_SERVER: "DEBUG"
