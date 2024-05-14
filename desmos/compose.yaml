@@ -1,3 +1,4 @@
+version: '3.8'
 services:
 
   # INFRASTRUCTURE
@@ -27,6 +28,14 @@ services:
       - ganache
 
   # ACCESS NODE A
+  
+  init-desmos:
+    image: alpine
+    command: [ "/bin/sh", "-c", "chmod 777 scripts/init-script.sh && scripts/init-script.sh scorpio-node-a 9090 dlt-adapter-node-a 8080 postgres-node-a 5432 scorpio-node-b 9090 dlt-adapter-node-b 8080 postgres-node-b 5432" ]
+  
+    volumes:
+      - ./scripts/init-script.sh:/scripts/init-script.sh
+    restart: "no"
 
   scorpio-node-a:
     image: scorpiobroker/all-in-one-runner:java-latest
@@ -68,9 +77,8 @@ services:
     ports:
       - "9092:8080"
     depends_on:
-      - dlt-adapter-node-a
-      - scorpio-node-a
-      - postgres-node-a
+      init-desmos:
+        condition: service_completed_successfully
 
   postgres-node-a:
     image: postgres:16.1
@@ -134,9 +142,8 @@ services:
     ports:
       - "9093:8080"
     depends_on:
-      - dlt-adapter-node-b
-      - scorpio-node-b
-      - postgres-node-b
+      init-desmos:
+        condition: service_completed_successfully
 
   postgres-node-b:
     image: postgres:16.1
