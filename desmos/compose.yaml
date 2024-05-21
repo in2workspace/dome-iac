@@ -28,11 +28,11 @@ services:
       - ganache
 
   # ACCESS NODE A
-  
+
   init-desmos:
     image: alpine
     command: [ "/bin/sh", "-c", "chmod 777 scripts/init-script.sh && scripts/init-script.sh scorpio-node-a 9090 dlt-adapter-node-a 8080 postgres-node-a 5432 scorpio-node-b 9090 dlt-adapter-node-b 8080 postgres-node-b 5432" ]
-  
+
     volumes:
       - ./scripts/init-script.sh:/scripts/init-script.sh
     restart: "no"
@@ -56,14 +56,16 @@ services:
       POSTGRES_DB: ngb
 
   desmos-node-a:
-    image: desmos-api:latest
+    image: in2workspace/desmos-api:v0.6.0-SNAPSHOT
+    #image: desmos-api:latest
     environment:
+      SPRING_PROFILES_ACTIVE: test
       SPRING_R2DBC_URL: r2dbc:postgresql://postgres-node-a:5432/dbtest
       SPRING_R2DBC_USERNAME: postgres
       SPRING_R2DBC_PASSWORD: postgres
       SPRING_FLYWAY_URL: jdbc:postgresql://postgres-node-a:5432/dbtest
-      LOGGING_LEVEL_ES_IN2_DESMOS: DEBUG
-      CLIENT_ORGANIZATIONID: VATES-S9999999E
+      LOGGING_LEVEL_ES_IN2_DESMOS: INFO
+      CLIENT_ORGANIZATIONID: VATES-S0000000E
       DLT_ADAPTER_PROVIDER: digitelts
       DLT_ADAPTER_INTERNAL_DOMAIN: http://dlt-adapter-node-a:8080
       DLT_ADAPTER_EXTERNAL_DOMAIN: http://dlt-adapter-node-a:8080
@@ -90,13 +92,13 @@ services:
       POSTGRES_DB: dbtest
 
   dlt-adapter-node-a:
-    image: quay.io/digitelts/dlt-adapter:1.4-SNAPSHOT
+    image: quay.io/digitelts/dlt-adapter:1.4.1
     environment:
       PRIVATE_KEY: 0x304d170fb355df65cc17ef7934404fe9baee73a1244380076436dec6fafb1e1f
-      DOME_EVENTS_CONTRACT_ADDRESS:
+      DOME_EVENTS_CONTRACT_ADDRESS: 0x37532a3dbf29942d10fb8ba57dc35d2134fe494d
       RPC_ADDRESS: http://ganache:8545
       DOME_PRODUCTION_BLOCK_NUMBER: 0
-      ISS: 0x9eb763b0a6b7e617d56b85f1df943f176018c8eedb2dd9dd37c0bd77496833fe
+      ISS: 0x8723da6199704b971030dc1838c443ffa9c67f27788ab4a92bce20ecd4c6402e #VATES-S0000000E
     ports:
       - "9094:8080"
 
@@ -121,13 +123,15 @@ services:
       POSTGRES_DB: ngb
 
   desmos-node-b:
-    image: desmos-api:latest
+    image: in2workspace/desmos-api:v0.6.0-SNAPSHOT
+    #image: desmos-api:latest
     environment:
+      SPRING_PROFILES_ACTIVE: test
       SPRING_R2DBC_URL: r2dbc:postgresql://postgres-node-b:5432/dbtest
       SPRING_R2DBC_USERNAME: postgres
       SPRING_R2DBC_PASSWORD: postgres
       SPRING_FLYWAY_URL: jdbc:postgresql://postgres-node-b:5432/dbtest
-      LOGGING_LEVEL_ES_IN2_DESMOS: DEBUG
+      LOGGING_LEVEL_ES_IN2_DESMOS: INFO
       CLIENT_ORGANIZATIONID: VATES-S9999999E
       DLT_ADAPTER_PROVIDER: digitelts
       DLT_ADAPTER_INTERNAL_DOMAIN: http://dlt-adapter-node-b:8080
@@ -155,12 +159,12 @@ services:
       POSTGRES_DB: dbtest
 
   dlt-adapter-node-b:
-    image: quay.io/digitelts/dlt-adapter:1.4-SNAPSHOT
+    image: quay.io/digitelts/dlt-adapter:1.4.1
     environment:
       PRIVATE_KEY: 0x304d170fb355df65cc17ef7934404fe9baee73a1244380076436dec6fafb1e1f
-      DOME_EVENTS_CONTRACT_ADDRESS:
+      DOME_EVENTS_CONTRACT_ADDRESS: 0x37532a3dbf29942d10fb8ba57dc35d2134fe494d
       RPC_ADDRESS: http://ganache:8545
       DOME_PRODUCTION_BLOCK_NUMBER: 0
-      ISS: 0x9eb763b0a6b7e617d56b85f1df943f176018c8eedb2dd9dd37c0bd77496833fe
+      ISS: 0x40b0ab9dfd960064fb7e9fdf77f889c71569e349055ff563e8d699d8fa97fa90 #VATES-S9999999E
     ports:
       - "9095:8080"
