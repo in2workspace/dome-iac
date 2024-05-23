@@ -22,8 +22,6 @@ services:
       - ./identity-provider/imports:/opt/keycloak/data/import
     links:
       - keycloak-postgres
-    networks:
-      - shared-network
 
   keycloak-postgres:
     image: postgres:latest
@@ -36,8 +34,6 @@ services:
       - '5433:5432'
     volumes:
       - keycloak-postgres-data:/var/lib/postgresql/data
-    networks:
-      - shared-network
 
   wallet-driving-application:
     image: in2kizuna/wallet-driving-application:v1.1.1-SNAPSHOT
@@ -55,8 +51,6 @@ services:
       - WEBSOCKET_URL=ws://localhost:8080
       - WEBSOCKET_URI=/api/v1/pin
       - REQCRED_URI=/api/v1/request-credential
-    networks:
-      - shared-network
 
   wallet-server:
     image: in2kizuna/wallet-server:v1.1.2-SNAPSHOT
@@ -99,8 +93,6 @@ services:
       HASHICORP_VAULT_PORT: "8201"
     ports:
       - "8080:8080"
-    networks:
-      - shared-network
 
   vault:
     image: hashicorp/vault:latest
@@ -115,8 +107,6 @@ services:
     cap_add:
       - IPC_LOCK
     command: /bin/sh /vault/init.sh
-    networks:
-      - shared-network
 
   zookeeper:
     image: zookeeper
@@ -133,8 +123,6 @@ services:
       interval: 20s
       timeout: 10s
       retries: 5
-    networks:
-      - shared-network
 
   kafka:
     image: bitnami/kafka:3.5.1-debian-11-r6
@@ -154,8 +142,6 @@ services:
       driver: none
     volumes:
       - kafka:/var/run/docker.sock
-    networks:
-      - shared-network
 
   scorpio:
     image: scorpiobroker/all-in-one-runner:java-kafka-latest
@@ -172,8 +158,6 @@ services:
       interval: 30s
       timeout: 15s
       retries: 5
-    networks:
-      - shared-network
 
   scorpio-postgres:
     image: postgis/postgis
@@ -192,8 +176,6 @@ services:
       interval: 20s
       timeout: 10s
       retries: 5
-    networks:
-      - shared-network
 
 volumes:
   keycloak-postgres-data:
@@ -204,6 +186,3 @@ volumes:
   zookeeper-logs:
   kafka:
   postgis-data:
-networks:
-  shared-network:
-    external: true
