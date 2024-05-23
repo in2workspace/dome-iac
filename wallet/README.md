@@ -24,7 +24,7 @@ cd wallet/test
 
 Execute the following command to deploy the docker compose:
 ```bash
-docker-compose -f docker-compose-test.yml up -d
+docker-compose -f compose.yml up -d
 ```
 
 ## Wallet Application

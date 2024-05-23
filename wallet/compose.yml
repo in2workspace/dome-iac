@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
 
-  wallet-identity-provider:
+  wallet-keycloak:
     image: quay.io/keycloak/keycloak:latest
     command:
       - 'start-dev'

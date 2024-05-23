@@ -10,7 +10,7 @@ The goal is to integrate Vault to securely handle private keys, facilitating sec
 1. Starting the Vault Service
 - First, start only the Vault service:
 ```sh
-docker-compose -f docker-compose-test.yml up -d vault
+docker-compose -f compose.yml up -d vault
 ```
 2. Accessing the Vault Container
 - Open your terminal and access the Vault
