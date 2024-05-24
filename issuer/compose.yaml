@@ -1,5 +1,15 @@
 services:
 
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./certs:/etc/nginx/certs
+      - ./html:/usr/share/nginx/html
+
   issuer-keycloak:
     image: in2workspace/issuer-keycloak-plugin:v1.1.0-SNAPSHOT
     volumes:
@@ -7,13 +17,15 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_HOSTNAME_URL: http://localhost:8088
-      KC_HOSTNAME_ADMIN_URL: http://localhost:8088
+      KC_HOSTNAME_URL: http://localhost:8081
+      KC_HOSTNAME_ADMIN_URL: http://localhost:8081
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://keycloak-postgres/cred
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-postgres/cred
       DB_PORT: 5432
+#      KC_INTERNAL_URL: http://issuer-keycloak:8080
+#      KC_EXTERNAL_URL: http://localhost:8081
       ISSUER_API_URL: http://issuer-api:8080
       PRE_AUTH_LIFESPAN: 10 # required?
       PRE_AUTH_LIFESPAN_TIME_UNIT: MINUTES # required?
@@ -22,10 +34,6 @@ services:
       TOKEN_EXPIRATION: 2592000 # required?
     ports:
       - "8081:8080"
-    links:
-      - keycloak-postgres
-    networks:
-      - local-network
 
   keycloak-postgres:
     image: postgres:latest
@@ -38,45 +46,33 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - local-network
 
   issuer-ui:
     image: in2workspace/credential-issuer-ui:v1.1.0-SNAPSHOT
     ports:
       - "4201:8088" # 8088?
-    networks:
-      - local-network
 
   issuer-api:
-    image: in2workspace/issuer-api:v0.5.0-SNAPSHOT
+    image: in2workspace/issuer-api:v0.6.0-SNAPSHOT
     environment:
-      APP_CONFIGS_IAM_EXTERNAL_DOMAIN: http://issuer-keycloak:8080
-      APP_CONFIGS_IAM_INTERNAL_DOMAIN: http://issuer-keycloak:8080
-      APP_CONFIGS_ISSUER_EXTERNAL_DOMAIN: http://credential-issuer:8071
-      APP_CONFIGS_AUTHENTIC_SOURCES_DOMAIN: http://localhost:8072
-      APP_CONFIGS_KEY_VAULT_DOMAIN: http://localhost:8081
-      APP_CONFIGS_REMOTE_SIGNATURE_DOMAIN: http://host.docker.internal:8050
-      APP_CONFIGS_ISSUER_DID: did:key:z6MkqmaCT2JqdUtLeKah7tEVfNXtDXtQyj4yxEgV11Y5CqUa
-      APP_CONFIGS_JWT_DECODER_PATH: /realms/CredentialIssuer/protocol/openid-connect/certs
-      APP_CONFIGS_JWT_DECODER_LOCAL_PATH: /realms/CredentialIssuer
-      APP_CONFIGS_JWT_VALIDATOR: http://localhost:8088/realms/CredentialIssuer
-      APP_CONFIGS_PRE_AUTH_CODE_URI_TEMPLATE: /realms/CredentialIssuer/verifiable-credential/{{did}}/credential-offer
-      APP_CONFIGS_TOKEN_URI_TEMPLATE: /realms/CredentialIssuer/verifiable-credential/{{did}}/token
-      SPRING_MAIL_HOST: host.docker.internal
-      SPRING_MAIL_PORT: 1025
-      SPRING_MAIL_USERNAME:
-      SPRING_MAIL_PASSWORD:
-      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: false
-      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: false
+      SPRING_ACTIVE_PROFILES: default
       SPRING_R2DBC_URL: r2dbc:postgresql://issuer-postgres:5432/issuer
       SPRING_R2DBC_USERNAME: postgres
       SPRING_R2DBC_PASSWORD: postgres
       SPRING_FLYWAY_URL: jdbc:postgresql://issuer-postgres:5432/issuer
+      SPRING_MAIL_HOST: host.docker.internal
+      SPRING_MAIL_PORT: 1025
+      API_EXTERNAL_DOMAIN: http://localhost:8082
+      API_INTERNAL_DOMAIN: http://issuer-api:8080
+      API_CONFIG_SOURCE: yaml
+      API_CACHE_LIFETIME_CREDENTIAL_OFFER: 10
+      API_CACHE_LIFETIME_VERIFIABLE_CREDENTIAL: 10
+      AUTH_SERVER_PROVIDER: keycloak
+      AUTH_SERVER_EXTERNAL_DOMAIN: http://localhost:8081
+      AUTH_SERVER_INTERNAL_DOMAIN: http://issuer-keycloak:8080
+      AUTH_SERVER_REALM: CredentialIssuer
     ports:
-      - "8071:8071"
-    networks:
-      - local-network
+      - "8082:8071"
 
   issuer-postgres:
     image: postgres:latest
@@ -89,12 +85,6 @@ services:
       - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data2
-    networks:
-      - local-network
 
 volumes:
   postgres_data:
-
-networks:
-  local-network:
-    external: true

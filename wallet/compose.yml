@@ -12,8 +12,8 @@ services:
       KC_DB: "postgres"
       KC_DB_URL: "jdbc:postgresql://keycloak-postgres/keycloak"
       KC_DB_URL_PORT: "5433"
-      KC_DB_USERNAME: "user"
-      KC_DB_PASSWORD: "1234"
+      KC_DB_USERNAME: "postgres"
+      KC_DB_PASSWORD: "postgres"
     ports:
       - "9099:9099"
     volumes:
@@ -26,8 +26,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: "keycloak"
-      POSTGRES_USER: "user"
-      POSTGRES_PASSWORD: "1234"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
     ports:
       - '5433:5432'
     volumes:
@@ -55,19 +55,6 @@ services:
     environment:
       # Logging Configuration
       LOGGING_LEVEL_ES_IN2_WALLET_SERVER: "DEBUG"
-      # OpenAPI Configuration
-      OPENAPI_SERVER_URL: "https://localhost:8080"
-      OPENAPI_SERVER_DESCRIPTION: "Wallet Server"
-      OPENAPI_INFO_TITLE: "Wallet Server"
-      OPENAPI_INFO_DESCRIPTION: "Wallet Server Component"
-      OPENAPI_INFO_VERSION: "1.0.0"
-      OPENAPI_INFO_TERMS_OF_SERVICE: "https://example.com/terms"
-      OPENAPI_INFO_LICENSE_NAME: "Apache 2.0"
-      OPENAPI_INFO_LICENSE_URL: "https://www.apache.org/licenses/LICENSE-2.0.html"
-      OPENAPI_INFO_CONTACT_NAME: "IN2, Ingeniería de la Información"
-      OPENAPI_INFO_CONTACT_URL: "https://in2.es"
-      OPENAPI_INFO_CONTACT_EMAIL: "contacto@in2.es"
-      # CORS
       WALLET_WDA_URL: "http://localhost:4200"
       # RETROCOMPATIBILITY
       AUTH_SERVER_DOMAIN: "https://issuerkeycloak.demo.in2.es/realms/EAAProvider"
@@ -76,8 +63,8 @@ services:
       IDENTITY_PROVIDER_URL: "http://wallet-identity-provider:9099/realms/wallet/protocol/openid-connect/token"
       IDENTITY_PROVIDER_CLIENT_SECRET: "fV51P8jFBo8VnFKMMuP3imw3H3i5mNck"
       IDENTITY_PROVIDER_CLIENT_ID: "user-registry-client"
-      IDENTITY_PROVIDER_USERNAME: "adminWallet"
-      IDENTITY_PROVIDER_PASSWORD: "adminPass"
+      IDENTITY_PROVIDER_USERNAME: "guest"
+      IDENTITY_PROVIDER_PASSWORD: "guest"
       #BROKER
       BROKER_PROVIDER: "scorpio"
       BROKER_EXTERNAL_URL_DOMAIN: "scorpio"
