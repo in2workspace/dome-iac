@@ -68,7 +68,7 @@ services:
       AUTH_SERVER_JWT_DECODER_PATH: "/protocol/openid-connect/certs"
       #IDP
       EBSI_TEST_URL: "http://wallet-keycloak:8080/realms/wallet/protocol/openid-connect/token"
-      EBSI_TEST_CLIENT_SECRET: "fV51P8jFBo8VnFKMMuP3imw3H3i5mNck"
+      EBSI_TEST_CLIENT_SECRET: ""
       EBSI_TEST_CLIENT_ID: "user-registry-client"
       EBSI_TEST_USERNAME: "admin"
       EBSI_TEST_PASSWORD: "adminPass"
@@ -80,7 +80,7 @@ services:
       # VAULT
       VAULT_PROVIDER_NAME: "hashicorp"
       HASHICORP_VAULT_HOST: "vault"
-      HASHICORP_VAULT_TOKEN: "hvs.Ehvahzm9irN6Xk1hgmZqkftv"
+      HASHICORP_VAULT_TOKEN: ""
       HASHICORP_VAULT_SCHEME: "http"
       HASHICORP_VAULT_PORT: "8201"
     ports:
