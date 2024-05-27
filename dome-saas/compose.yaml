@@ -4,6 +4,9 @@ services:
 
   nginx:
     image: nginx:latest
+    environment:
+      VIRTUAL_PORT: 80
+      VIRTUAL_HOST: dome.saas.local
     ports:
       - "80:80"
       - "443:443"
@@ -11,6 +14,8 @@ services:
       - ../dome-saas/nginx.conf:/etc/nginx/nginx.conf
       - ../dome-saas/certs:/etc/nginx/certs
       - ../dome-saas/html:/usr/share/nginx/html
+    networks:
+      - dome-saas
 
 # ::::::::::::::::::::::::: ISSUER :::::::::::::::::::::::::
 
@@ -39,6 +44,8 @@ services:
       TOKEN_EXPIRATION: 2592000 # required?
     ports:
       - "8081:8080"
+    networks:
+      - dome-saas
 
   issuer-keycloak-postgres:
     image: postgres:latest
@@ -50,12 +57,16 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/issuer-keycloak-data
+    networks:
+      - dome-saas
 
   issuer-ui:
     image: in2workspace/credential-issuer-ui:v1.1.0-SNAPSHOT
     ports:
       - "4201:8088" # 8088?
+    networks:
+      - dome-saas
 
   issuer-api:
     image: in2workspace/issuer-api:v0.6.0-SNAPSHOT
@@ -85,6 +96,8 @@ services:
       AUTH_SERVER_CLIENT_PASSWORD: "user"
     ports:
       - "8082:8080"
+    networks:
+      - dome-saas
 
   issuer-postgres:
     image: postgres:latest
@@ -96,7 +109,9 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data2
+      - postgres_data:/var/lib/postgresql/issuer-api-data
+    networks:
+      - dome-saas
 
 # ::::::::::::::::::::::::: WALLET :::::::::::::::::::::::::
 
@@ -112,8 +127,8 @@ services:
       KC_DB_PASSWORD: "postgres"
     ports:
       - "9099:8080"
-    links:
-      - wallet-keycloak-postgres
+    networks:
+      - dome-saas
 
   wallet-keycloak-postgres:
     image: postgres:latest
@@ -125,7 +140,9 @@ services:
     ports:
       - '5435:5432'
     volumes:
-      - keycloak-postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/wallet-keycloak-data
+    networks:
+      - dome-saas
 
   wallet-ui:
     image: in2workspace/wallet-ui:v1.2.0-SNAPSHOT
@@ -143,41 +160,34 @@ services:
       WEBSOCKET_URL: "ws://localhost:8080"
       WEBSOCKET_URI: "/api/v1/pin"
       REQCRED_URI: "/api/v1/request-credential"
-
+    networks:
+      - dome-saas
 
   wallet-api:
     image: in2workspace/wallet-api:v1.2.0-SNAPSHOT
     environment:
-      # Logging Configuration
       LOGGING_LEVEL_ES_IN2_WALLET_SERVER: "DEBUG"
       WALLET_WDA_URLS_SCHEMA: "http"
       WALLET_WDA_URLS_DOMAIN: "localhost"
       WALLET_WDA_URLS_PORT: "4200"
-      
-      # Security
       AUTH_SERVER_EXTERNAL_URL_SCHEMA: "http"
       AUTH_SERVER_EXTERNAL_URL_DOMAIN: "localhost"
       AUTH_SERVER_EXTERNAL_URL_PORT: "9099"
       AUTH_SERVER_EXTERNAL_URL_PATH: "/realms/wallet"
-
       AUTH_SERVER_INTERNAL_URL_SCHEMA: "http"
       AUTH_SERVER_INTERNAL_URL_DOMAIN: "wallet-keycloak"
       AUTH_SERVER_INTERNAL_URL_PORT: "8080"
       AUTH_SERVER_INTERNAL_URL_PATH: "/realms/wallet"
-
       AUTH_SERVER_JWT_DECODER_PATH: "/protocol/openid-connect/certs"
-      #IDP
       EBSI_TEST_URL: "http://wallet-keycloak:8080/realms/wallet/protocol/openid-connect/token"
       EBSI_TEST_CLIENT_SECRET: ""
       EBSI_TEST_CLIENT_ID: "user-registry-client"
       EBSI_TEST_USERNAME: "admin"
       EBSI_TEST_PASSWORD: "adminPass"
-      #BROKER
       BROKER_PROVIDER: "scorpio"
       BROKER_EXTERNAL_URL_DOMAIN: "scorpio"
       BROKER_INTERNAL_URL_DOMAIN: "scorpio"
       BROKER_PATHS_ENTITIES: "/ngsi-ld/v1/entities"
-      # VAULT
       VAULT_PROVIDER_NAME: "hashicorp"
       HASHICORP_VAULT_HOST: "vault"
       HASHICORP_VAULT_TOKEN: ""
@@ -185,34 +195,38 @@ services:
       HASHICORP_VAULT_PORT: "8201"
     ports:
       - "8080:8080"
+    networks:
+      - dome-saas
 
   vault:
     image: hashicorp/vault:latest
     container_name: vault
+    command: /bin/sh /vault/init.sh
+    cap_add:
+      - IPC_LOCK
     ports:
       - "8201:8201"
     volumes:
-      - VAULT_LOGS:/vault/logs
-      - VAULT_FILE:/vault/file
+      - vault_data:/vault/logs
+      - vault_data:/vault/file
       - ../dome-saas/vault/init.sh:/vault/init.sh
       - ../dome-saas/vault/config.json:/vault/config/config.json
-    cap_add:
-      - IPC_LOCK
-    command: /bin/sh /vault/init.sh
+    networks:
+      - dome-saas
 
   scorpio:
     image: scorpiobroker/all-in-one-runner:java-latest
-    depends_on:
-    - scorpio-postgres
-    ports:
-      - "9090:9090"
     environment:
       DBHOST: scorpio-postgres
+    ports:
+      - "9090:9090"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9090/health"]
       interval: 30s
       timeout: 15s
       retries: 5
+    networks:
+      - dome-saas
  
   scorpio-postgres:
     image: postgis/postgis
@@ -225,16 +239,24 @@ services:
     ports:
       - "5434"
     volumes:
-      - postgis-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/scorpio-data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ngb -d ngb"]
       interval: 20s
       timeout: 10s
       retries: 5
+    networks:
+      - dome-saas
 
 volumes:
   postgres_data:
-  keycloak-postgres-data:
-  VAULT_LOGS:
-  VAULT_FILE:
-  postgis-data:
+  keycloak_postgres_data:
+  vault_data:
+  postgis_data:
+
+#Specify the network these containers will run on
+networks:
+  dome-saas:
+    name: dome-saas
+    external: true
+
