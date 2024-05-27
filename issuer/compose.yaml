@@ -1,19 +1,9 @@
 services:
 
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./certs:/etc/nginx/certs
-      - ./html:/usr/share/nginx/html
-
   issuer-keycloak:
     image: in2workspace/issuer-keycloak-plugin:v1.1.0-SNAPSHOT
     volumes:
-      - ./imports:/opt/keycloak/data/import
+      - ../dome-saas/imports:/opt/keycloak/data/import
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin

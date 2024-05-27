@@ -1,23 +1,17 @@
 services:
 
   wallet-keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    command:
-      - 'start-dev'
-      - '--import-realm'
+    image: in2workspace/dome-wallet-keycloak:v0.1.0
     environment:
       KEYCLOAK_ADMIN: "admin"
-      KEYCLOAK_ADMIN_PASSWORD: "1234"
-      KC_HTTP_PORT: "9099"
+      KEYCLOAK_ADMIN_PASSWORD: "admin"
       KC_DB: "postgres"
       KC_DB_URL: "jdbc:postgresql://keycloak-postgres/keycloak"
       KC_DB_URL_PORT: "5433"
       KC_DB_USERNAME: "postgres"
       KC_DB_PASSWORD: "postgres"
     ports:
-      - "9099:9099"
-    volumes:
-      - ./identity-provider/imports:/opt/keycloak/data/import
+      - "9099:8080"
     links:
       - keycloak-postgres
 
@@ -33,38 +27,51 @@ services:
     volumes:
       - keycloak-postgres-data:/var/lib/postgresql/data
 
-  wallet-driving-application:
-    image: in2kizuna/wallet-driving-application:v1.1.1-SNAPSHOT
+  wallet-ui:
+    image: in2workspace/wallet-ui:v1.2.0-SNAPSHOT
     ports:
-      - "4200:8088"
+      - "4200:8080"
     environment:
-      - WCA_URL=http://localhost:8080
-      - DATA_URL=http://localhost:8080
-      - LOGIN_URL=http://localhost:9099/realms/wallet
-      - EXECCONT_URI=/api/v1/execute-content
-      - VP_URL=/api/v1/verifiable-presentation
-      - CRED_URI=/api/v1/credentials
-      - CREDID_URI=/api/v1/credentials?credentialId=
-      - USER_URI=/api/v1/users
-      - WEBSOCKET_URL=ws://localhost:8080
-      - WEBSOCKET_URI=/api/v1/pin
-      - REQCRED_URI=/api/v1/request-credential
+      SERVER_URL: "http://localhost:8080"
+      IAM_URL: "http://localhost:9099"
+      IAM_URI: "/realms/wallet"
+      EXECCONT_URI: "/api/v1/execute-content"
+      VP_URI: "/api/v1/vp"
+      CRED_URI: "/api/v1/credentials"
+      CREDID_URI: "/api/v1/credentials?credentialId="
+      USER_URI: "/api/v1/users"
+      WEBSOCKET_URL: "ws://localhost:8080"
+      WEBSOCKET_URI: "/api/v1/pin"
+      REQCRED_URI: "/api/v1/request-credential"
 
-  wallet-server:
-    image: in2kizuna/wallet-server:v1.1.2-SNAPSHOT
+
+  wallet-api:
+    image: in2workspace/wallet-api:v1.2.0-SNAPSHOT
     environment:
       # Logging Configuration
       LOGGING_LEVEL_ES_IN2_WALLET_SERVER: "DEBUG"
-      WALLET_WDA_URL: "http://localhost:4200"
-      # RETROCOMPATIBILITY
-      AUTH_SERVER_DOMAIN: "https://issuerkeycloak.demo.in2.es/realms/EAAProvider"
-      AUTH_SERVER_TOKEN_ENDPOINT: "https://issuerkeycloak.demo.in2.es/realms/EAAProvider/verifiable-credential/did:key:z6MkqmaCT2JqdUtLeKah7tEVfNXtDXtQyj4yxEgV11Y5CqUa/token"
+      WALLET_WDA_URLS_SCHEMA: "http"
+      WALLET_WDA_URLS_DOMAIN: "localhost"
+      WALLET_WDA_URLS_PORT: "4200"
+      
+      # Security
+      AUTH_SERVER_EXTERNAL_URL_SCHEMA: "http"
+      AUTH_SERVER_EXTERNAL_URL_DOMAIN: "localhost"
+      AUTH_SERVER_EXTERNAL_URL_PORT: "9099"
+      AUTH_SERVER_EXTERNAL_URL_PATH: "/realms/wallet"
+
+      AUTH_SERVER_INTERNAL_URL_SCHEMA: "http"
+      AUTH_SERVER_INTERNAL_URL_DOMAIN: "wallet-keycloak"
+      AUTH_SERVER_INTERNAL_URL_PORT: "8080"
+      AUTH_SERVER_INTERNAL_URL_PATH: "/realms/wallet"
+
+      AUTH_SERVER_JWT_DECODER_PATH: "/protocol/openid-connect/certs"
       #IDP
-      IDENTITY_PROVIDER_URL: "http://wallet-identity-provider:9099/realms/wallet/protocol/openid-connect/token"
-      IDENTITY_PROVIDER_CLIENT_SECRET: "fV51P8jFBo8VnFKMMuP3imw3H3i5mNck"
-      IDENTITY_PROVIDER_CLIENT_ID: "user-registry-client"
-      IDENTITY_PROVIDER_USERNAME: "guest"
-      IDENTITY_PROVIDER_PASSWORD: "guest"
+      EBSI_TEST_URL: "http://wallet-keycloak:8080/realms/wallet/protocol/openid-connect/token"
+      EBSI_TEST_CLIENT_SECRET: "fV51P8jFBo8VnFKMMuP3imw3H3i5mNck"
+      EBSI_TEST_CLIENT_ID: "user-registry-client"
+      EBSI_TEST_USERNAME: "admin"
+      EBSI_TEST_PASSWORD: "adminPass"
       #BROKER
       BROKER_PROVIDER: "scorpio"
       BROKER_EXTERNAL_URL_DOMAIN: "scorpio"
@@ -73,7 +80,7 @@ services:
       # VAULT
       VAULT_PROVIDER_NAME: "hashicorp"
       HASHICORP_VAULT_HOST: "vault"
-      HASHICORP_VAULT_TOKEN: ""
+      HASHICORP_VAULT_TOKEN: "hvs.Ehvahzm9irN6Xk1hgmZqkftv"
       HASHICORP_VAULT_SCHEME: "http"
       HASHICORP_VAULT_PORT: "8201"
     ports:
@@ -87,63 +94,26 @@ services:
     volumes:
       - VAULT_LOGS:/vault/logs
       - VAULT_FILE:/vault/file
-      - ./vault/init.sh:/vault/init.sh
-      - ./vault/config.json:/vault/config/config.json
+      - ../dome-saas/vault/init.sh:/vault/init.sh
+      - ../dome-saas/vault/config.json:/vault/config/config.json
     cap_add:
       - IPC_LOCK
     command: /bin/sh /vault/init.sh
 
-  zookeeper:
-    image: zookeeper
-    ports:
-      - "2181"
-    logging:
-      driver: none
-    volumes:
-      - zookeeper-data:/data
-      - zookeeper-datalog:/datalog
-      - zookeeper-logs:/logs
-    healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "2181"]
-      interval: 20s
-      timeout: 10s
-      retries: 5
-
-  kafka:
-    image: bitnami/kafka:3.5.1-debian-11-r6
-    depends_on:
-      zookeeper:
-        condition: service_healthy
-    environment:
-      KAFKA_ADVERTISED_HOST_NAME: kafka
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_PORT: 9092
-      KAFKA_LOG_RETENTION_MS: 10000
-      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 5000
-      ALLOW_PLAINTEXT_LISTENER: "yes"
-    ports:
-      - "9092"
-    logging:
-      driver: none
-    volumes:
-      - kafka:/var/run/docker.sock
-
   scorpio:
-    image: scorpiobroker/all-in-one-runner:java-kafka-latest
+    image: scorpiobroker/all-in-one-runner:java-latest
     depends_on:
     - scorpio-postgres
-    - kafka
     ports:
       - "9090:9090"
     environment:
       DBHOST: scorpio-postgres
-      BUSHOST: kafka
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9090/health"]
       interval: 30s
       timeout: 15s
       retries: 5
-
+ 
   scorpio-postgres:
     image: postgis/postgis
     environment:
