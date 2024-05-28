@@ -23,7 +23,6 @@ services:
 
   issuer-keycloak:
     image: in2workspace/issuer-keycloak-plugin:v1.1.0-SNAPSHOT
-#    image: issuer-keycloak:latest
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
