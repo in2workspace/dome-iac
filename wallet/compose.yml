@@ -94,11 +94,11 @@ services:
     volumes:
       - VAULT_LOGS:/vault/logs
       - VAULT_FILE:/vault/file
-      - ../dome-saas/vault/init.sh:/vault/init.sh
+      - ../dome-saas/vault/wallet_init.sh:/vault/wallet_init.sh
       - ../dome-saas/vault/config.json:/vault/config/config.json
     cap_add:
       - IPC_LOCK
-    command: /bin/sh /vault/init.sh
+    command: /bin/sh /vault/wallet_init.sh
 
   scorpio:
     image: scorpiobroker/all-in-one-runner:java-latest
