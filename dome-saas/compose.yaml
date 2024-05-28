@@ -75,7 +75,7 @@ services:
       - dome-saas-network
 
   issuer-ui:
-    image: in2workspace/credential-issuer-ui:v1.1.0-SNAPSHOT
+    image: in2workspace/issuer-ui:v0.6.0-SNAPSHOT
     ports:
       - "4201:8080"
     extra_hosts:
@@ -200,7 +200,7 @@ services:
       AUTH_SERVER_INTERNAL_URL_PATH: "/realms/wallet"
       AUTH_SERVER_JWT_DECODER_PATH: "/protocol/openid-connect/certs"
       EBSI_TEST_URL: "http://wallet-keycloak:8080/realms/wallet/protocol/openid-connect/token"
-      EBSI_TEST_CLIENT_SECRET: ""
+      EBSI_TEST_CLIENT_SECRET: "fV51P8jFBo8VnFKMMuP3imw3H3i5mNck"
       EBSI_TEST_CLIENT_ID: "user-registry-client"
       EBSI_TEST_USERNAME: "admin"
       EBSI_TEST_PASSWORD: "adminPass"
