@@ -105,8 +105,10 @@ services:
       - dome-saas-network
 
   issuer-api:
-    image: in2workspace/issuer-api:v0.6.0-SNAPSHOT
+    image: in2workspace/issuer-api:v0.7.0-SNAPSHOT
+    pull_policy: always
     environment:
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: DEBUG
       SPRING_ACTIVE_PROFILES: default
       SPRING_R2DBC_URL: r2dbc:postgresql://issuer-postgres:5432/issuer
       SPRING_R2DBC_USERNAME: postgres
@@ -130,8 +132,6 @@ services:
       AUTH_SERVER_CLIENT_PASSWORD: user
       ISSUER_UI_EXTERNAL_DOMAIN: http://localhost:4201
       UI_INTERNAL_DOMAIN: http://localhost:4201
-      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: DEBUG
-      LOGGING_LEVEL_ES_IN2_ISSUER: DEBUG 
     ports:
       - "8081:8080"
     extra_hosts:
@@ -193,6 +193,7 @@ services:
 
   wallet-ui:
     image: in2workspace/wallet-ui:v1.2.0-SNAPSHOT
+    pull_policy: always
     environment:
       WALLET_API_INTERNAL_DOMAIN: http://localhost:8082
       WALLET_API_WEBSOCKET_EXTERNAL_DOMAIN: ws://localhost:8082
@@ -217,6 +218,7 @@ services:
 
   wallet-api:
     image: in2workspace/wallet-api:v1.2.0-SNAPSHOT
+    pull_policy: always
     entrypoint: /bin/sh /vault/start-wallet-api.sh
     environment:
       LOGGING_LEVEL_ES_IN2_WALLET: DEBUG
@@ -238,7 +240,7 @@ services:
       EBSI_TEST_USERNAME: admin
       EBSI_TEST_PASSWORD: adminPass
       BROKER_PROVIDER: scorpio
-      BROKER_EXTERNAL_URL_DOMAIN: localhost
+      BROKER_EXTERNAL_URL_DOMAIN: scorpio
       BROKER_INTERNAL_URL_DOMAIN: scorpio
       BROKER_PATHS_ENTITIES: /ngsi-ld/v1/entities
       VAULT_PROVIDER_NAME: hashicorp
