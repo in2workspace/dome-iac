@@ -31,6 +31,7 @@ services:
 
   issuer-keycloak:
     image: in2workspace/issuer-keycloak-plugin:v1.1.0-SNAPSHOT
+    pull_policy: always
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -67,7 +68,7 @@ services:
       - dome-saas-network
 
   issuer-keycloak-postgres:
-    image: postgres:latest
+    image: postgres:16.3
     restart: unless-stopped
     environment:
       POSTGRES_DB: cred
@@ -84,6 +85,7 @@ services:
 
   issuer-ui:
     image: in2workspace/issuer-ui:v0.6.0-SNAPSHOT
+    pull_policy: always
     ports:
       - "4201:8080"
     extra_hosts:
@@ -93,6 +95,7 @@ services:
 
   issuer-api:
     image: in2workspace/issuer-api:v0.6.0-SNAPSHOT
+    pull_policy: always
     environment:
       SPRING_ACTIVE_PROFILES: default
       SPRING_R2DBC_URL: r2dbc:postgresql://issuer-postgres:5432/issuer
@@ -125,7 +128,7 @@ services:
       - dome-saas-network
 
   issuer-postgres:
-    image: postgres:latest
+    image: postgres:16.3
     restart: unless-stopped
     environment:
       POSTGRES_DB: issuer
@@ -144,6 +147,7 @@ services:
 
   wallet-keycloak:
     image: in2workspace/dome-wallet-keycloak:v0.1.0-SNAPSHOT
+    pull_policy: always
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -160,7 +164,7 @@ services:
       - dome-saas-network
 
   wallet-keycloak-postgres:
-    image: postgres:latest
+    image: postgres:16.3
     restart: unless-stopped
     environment:
       POSTGRES_DB: keycloak
@@ -177,6 +181,7 @@ services:
 
   wallet-ui:
     image: in2workspace/wallet-ui:v1.2.0-SNAPSHOT
+    pull_policy: always
     environment:
       WALLET_API_INTERNAL_DOMAIN: http://wallet-api:8080
       WALLET_API_WEBSOCKET_EXTERNAL_DOMAIN: ws://dome.saas.local
@@ -201,6 +206,7 @@ services:
 
   wallet-api:
     image: in2workspace/wallet-api:v1.2.0-SNAPSHOT
+    pull_policy: always
     entrypoint: /bin/sh /vault/start-wallet-api.sh
     environment:
       LOGGING_LEVEL_ES_IN2_WALLET_SERVER: DEBUG
@@ -240,7 +246,7 @@ services:
       - dome-saas-network
 
   vault:
-    image: hashicorp/vault:latest
+    image: hashicorp/vault:1.16.2
     container_name: vault
     command: /bin/sh /vault/init.sh
     cap_add:
