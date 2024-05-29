@@ -181,8 +181,6 @@ services:
       WALLET_API_INTERNAL_DOMAIN: http://wallet-api:8080
       WALLET_API_WEBSOCKET_EXTERNAL_DOMAIN: ws://dome.saas.local
       WALLET_API_WEBSOCKET_PATH: /api/v1/pin
-      IAM_EXTERNAL_DOMAIN: http://localhost:7002
-      IAM_REALM_PATH: /realms/wallet
       WALLET_API_EXECUTE_CONTENT_PATH: /api/v1/execute-content
       WALLET_API_REQUEST_CREDENTIAL_PATH: /api/v1/request-credential
       WALLET_API_VERIFIABLE_PRESENTATION_PATH: /api/v1/verifiable-presentation
@@ -192,6 +190,8 @@ services:
       WALLET_API_USERS_PATH: /api/v1/users
       WALLET_API_EBSI_PATH: /api/v1/ebsi-did
       WALLET_API_CBOR_PATH: /api/v1/vp/cbor
+      IAM_EXTERNAL_DOMAIN: http://localhost:7002
+      IAM_REALM_PATH: /realms/wallet
     ports:
       - "4202:8080"
     extra_hosts:
