@@ -182,10 +182,9 @@ services:
 
   wallet-ui:
     image: in2workspace/wallet-ui:v1.2.0-SNAPSHOT
-    pull_policy: always
     environment:
-      WALLET_API_INTERNAL_DOMAIN: http://wallet-api:8080
-      WALLET_API_WEBSOCKET_EXTERNAL_DOMAIN: ws://dome.saas.local
+      WALLET_API_INTERNAL_DOMAIN: http://localhost:8082
+      WALLET_API_WEBSOCKET_EXTERNAL_DOMAIN: ws://localhost:8082
       WALLET_API_WEBSOCKET_PATH: /api/v1/pin
       WALLET_API_EXECUTE_CONTENT_PATH: /api/v1/execute-content
       WALLET_API_REQUEST_CREDENTIAL_PATH: /api/v1/request-credential
@@ -207,13 +206,12 @@ services:
 
   wallet-api:
     image: in2workspace/wallet-api:v1.2.0-SNAPSHOT
-    pull_policy: always
     entrypoint: /bin/sh /vault/start-wallet-api.sh
     environment:
-      LOGGING_LEVEL_ES_IN2_WALLET_SERVER: DEBUG
-      WALLET_WDA_URLS_SCHEMA: http
-      WALLET_WDA_URLS_DOMAIN: localhost
-      WALLET_WDA_URLS_PORT: 4202
+      LOGGING_LEVEL_ES_IN2_WALLET: DEBUG
+      WALLET_WDA_URLS_0_SCHEME: http
+      WALLET_WDA_URLS_0_DOMAIN: localhost
+      WALLET_WDA_URLS_0_PORT: 4202
       AUTH_SERVER_EXTERNAL_URL_SCHEMA: http
       AUTH_SERVER_EXTERNAL_URL_DOMAIN: localhost
       AUTH_SERVER_EXTERNAL_URL_PORT: 7002
@@ -229,8 +227,8 @@ services:
       EBSI_TEST_USERNAME: admin
       EBSI_TEST_PASSWORD: adminPass
       BROKER_PROVIDER: scorpio
-      BROKER_EXTERNAL_URL_DOMAIN: https://localhost:9090
-      BROKER_INTERNAL_URL_DOMAIN: http://scorpio:9090
+      BROKER_EXTERNAL_URL_DOMAIN: localhost
+      BROKER_INTERNAL_URL_DOMAIN: scorpio
       BROKER_PATHS_ENTITIES: /ngsi-ld/v1/entities
       VAULT_PROVIDER_NAME: hashicorp
       HASHICORP_VAULT_HOST: vault
