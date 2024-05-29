@@ -35,8 +35,8 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_HOSTNAME_URL: http://localhost:8081
-      KC_HOSTNAME_ADMIN_URL: http://localhost:8081
+      KC_HOSTNAME_URL: http://localhost:7001
+      KC_HOSTNAME_ADMIN_URL: http://localhost:7001
       KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/conf/server.key.pem
       KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/conf/server.crt.pem
       KC_HTTPS_TRUST_STORE_FILE: /opt/keycloak/conf/truststore.jks
