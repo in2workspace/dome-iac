@@ -105,9 +105,7 @@ services:
       - dome-saas-network
 
   issuer-api:
-    #image: in2workspace/issuer-api:v0.6.0-SNAPSHOT
-    image: credential-issuer-local:latest
-    #pull_policy: always
+    image: in2workspace/issuer-api:v0.6.0-SNAPSHOT
     environment:
       SPRING_ACTIVE_PROFILES: default
       SPRING_R2DBC_URL: r2dbc:postgresql://issuer-postgres:5432/issuer
