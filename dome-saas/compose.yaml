@@ -60,7 +60,9 @@ services:
     volumes:
       - ./certs/server.key:/opt/keycloak/conf/server.key.pem
       - ./certs/server.crt:/opt/keycloak/conf/server.crt.pem
-      - ./certs/truststore.jks:/opt/keycloak/conf/truststore.jks
+      - ./scripts/issuer-keycloak-init.sh:/opt/keycloak/bin/issuer-keycloak-init.sh
+      - keycloak_truststore:/opt/keycloak/conf/truststore.jks
+    entrypoint: /bin/sh /opt/keycloak/bin/issuer-keycloak-init.sh
     networks:
       - dome-saas-network
 
@@ -74,7 +76,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/issuer-keycloak-data
+      - postgres_data:/var/lib/postgresql/data
     extra_hosts:
       - "dome.saas.local:172.23.0.100"
     networks:
@@ -176,19 +178,20 @@ services:
   wallet-ui:
     image: in2workspace/wallet-ui:v1.2.0-SNAPSHOT
     environment:
-      SERVER_URL: http://wallet-api:8080
-      WEBSOCKET_URL: ws://dome.saas.local
-      WEBSOCKET_URI: /api/v1/pin
-      IAM_URL: http://localhost:7002
-      EXECUTE_CONTENT_URI: /api/v1/execute-content
-      REQUEST_CREDENTIAL_URI: /api/v1/request-credential
-      VERIFIABLE_PRESENTATION_URI: /api/v1/verifiable-presentation
-      CREDENTIALS_URI: /api/v1/credentials
-      CREDENTIALS_BY_ID_URI: /api/v1/credentials?credentialId=
-      CREDENTIALS_SIGNED_BY_ID_URI: /api/v1/request-signed-credential
-      USERS_URI: /api/v1/users
-      EBSI_DID_URI: /api/v1/ebsi-did
-      CBOR: /api/v1/vp/cbor
+      WALLET_API_INTERNAL_DOMAIN: http://wallet-api:8080
+      WALLET_API_WEBSOCKET_EXTERNAL_DOMAIN: ws://dome.saas.local
+      WALLET_API_WEBSOCKET_PATH: /api/v1/pin
+      IAM_EXTERNAL_DOMAIN: http://localhost:7002
+      IAM_REALM_PATH: /realms/wallet
+      WALLET_API_EXECUTE_CONTENT_PATH: /api/v1/execute-content
+      WALLET_API_REQUEST_CREDENTIAL_PATH: /api/v1/request-credential
+      WALLET_API_VERIFIABLE_PRESENTATION_PATH: /api/v1/verifiable-presentation
+      WALLET_API_CREDENTIALS_PATH: /api/v1/credentials
+      WALLET_API_CREDENTIALS_BY_ID_PATH: /api/v1/credentials?credentialId=
+      WALLET_API_REQUEST_SIGNED_CREDENTIAL_PATH: /api/v1/request-signed-credential
+      WALLET_API_USERS_PATH: /api/v1/users
+      WALLET_API_EBSI_PATH: /api/v1/ebsi-did
+      WALLET_API_CBOR_PATH: /api/v1/vp/cbor
     ports:
       - "4202:8080"
     extra_hosts:
@@ -293,10 +296,9 @@ services:
       - dome-saas-network
 
 volumes:
+  keycloak_truststore:
   postgres_data:
-  keycloak_postgres_data:
   vault_data:
-  postgis_data:
 
 networks:
   dome-saas-network:
