@@ -108,7 +108,6 @@ services:
     image: in2workspace/issuer-api:v0.7.0-SNAPSHOT
     pull_policy: always
     environment:
-      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: DEBUG
       SPRING_ACTIVE_PROFILES: default
       SPRING_R2DBC_URL: r2dbc:postgresql://issuer-postgres:5432/issuer
       SPRING_R2DBC_USERNAME: postgres
@@ -131,7 +130,7 @@ services:
       AUTH_SERVER_CLIENT_USERNAME: user
       AUTH_SERVER_CLIENT_PASSWORD: user
       ISSUER_UI_EXTERNAL_DOMAIN: http://localhost:4201
-      UI_INTERNAL_DOMAIN: http://localhost:4201
+      ISSUER_UI_INTERNAL_DOMAIN: http://localhost:4201
     ports:
       - "8081:8080"
     extra_hosts:
