@@ -18,14 +18,14 @@ services:
       dome-saas-network:
         ipv4_address: 172.23.0.100
 
-#  mail-hog:
-#    image: mailhog/mailhog
-#    restart: always
-#    ports:
-#      - "1025:1025"
-#      - "8025:8025"
-#    networks:
-#      - dome-saas-network
+  mail-hog:
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - dome-saas-network
 
   # ::::::::::::::::::::::::: ISSUER :::::::::::::::::::::::::
 
