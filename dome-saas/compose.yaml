@@ -18,12 +18,23 @@ services:
       dome-saas-network:
         ipv4_address: 172.23.0.100
 
-  mail-hog:
-    image: mailhog/mailhog
-    restart: always
-    ports:
-      - "1025:1025"
-      - "8025:8025"
+#  mail-hog:
+#    image: mailhog/mailhog
+#    restart: always
+#    ports:
+#      - "1025:1025"
+#      - "8025:8025"
+#    networks:
+#      - dome-saas-network
+
+  # ::::::::::::::::::::::::: ISSUER :::::::::::::::::::::::::
+
+  certificate-init:
+    image: alpine:latest
+    command: /bin/sh -c "apk add --no-cache curl openjdk11-jre openssl && /opt/keycloak/bin/issuer-keycloak-init.sh"
+    volumes:
+      - ./scripts/issuer-keycloak-init.sh:/opt/keycloak/bin/issuer-keycloak-init.sh
+      - keycloak_truststore:/opt/keycloak/conf
     networks:
       - dome-saas-network
 
@@ -37,11 +48,10 @@ services:
     networks:
       - dome-saas-network
 
-  # ::::::::::::::::::::::::: ISSUER :::::::::::::::::::::::::
-
   issuer-keycloak:
     image: in2workspace/issuer-keycloak-plugin:v1.1.0-SNAPSHOT
     pull_policy: always
+    command: start --truststore-paths=/opt/keycloak/conf/truststores
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -71,10 +81,7 @@ services:
     volumes:
       - ./certs/server.key:/opt/keycloak/conf/server.key.pem
       - ./certs/server.crt:/opt/keycloak/conf/server.crt.pem
-      - ./scripts/issuer-keycloak-init.sh:/opt/keycloak/bin/issuer-keycloak-init.sh
-      - ./certs/truststore.jks:/opt/keycloak/conf/truststore.jks
-#      - keycloak_truststore:/opt/keycloak/conf/truststore.jks
-#    entrypoint: /bin/sh /opt/keycloak/bin/issuer-keycloak-init.sh
+      - keycloak_truststore:/opt/keycloak/conf/truststore.jks
     networks:
       - dome-saas-network
 
@@ -157,7 +164,7 @@ services:
   # ::::::::::::::::::::::::: WALLET :::::::::::::::::::::::::
 
   wallet-keycloak:
-    image: in2workspace/dome-wallet-keycloak:v0.1.0-SNAPSHOT
+    image: in2workspace/dome-wallet-keycloak:v1.0.0
     pull_policy: always
     environment:
       KEYCLOAK_ADMIN: admin
@@ -191,7 +198,7 @@ services:
       - dome-saas-network
 
   wallet-ui:
-    image: in2workspace/wallet-ui:v1.2.0-SNAPSHOT
+    image: in2workspace/wallet-ui:v1.2.0
     pull_policy: always
     environment:
       WALLET_API_INTERNAL_DOMAIN: http://localhost:8082
@@ -216,7 +223,7 @@ services:
       - dome-saas-network
 
   wallet-api:
-    image: in2workspace/wallet-api:v1.2.0-SNAPSHOT
+    image: in2workspace/wallet-api:v1.2.0
     pull_policy: always
     entrypoint: /bin/sh /vault/start-wallet-api.sh
     environment:
