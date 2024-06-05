@@ -115,7 +115,7 @@ services:
       - dome-saas-network
 
   issuer-api:
-    image: in2workspace/issuer-api:v0.7.0-SNAPSHOT
+    image: in2workspace/issuer-api:v0.8.0-SNAPSHOT
     pull_policy: always
     environment:
       SPRING_ACTIVE_PROFILES: default
@@ -125,6 +125,11 @@ services:
       SPRING_FLYWAY_URL: jdbc:postgresql://issuer-postgres:5432/issuer
       SPRING_MAIL_HOST: host.docker.internal
       SPRING_MAIL_PORT: 1025
+      SPRING_MAIL_USERNAME:
+      SPRING_MAIL_PASSWORD:
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: false
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: false
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_TRUST:
       API_EXTERNAL_DOMAIN: http://dome.saas.local
       API_INTERNAL_DOMAIN: http://issuer-api:8080
       API_CONFIG_SOURCE: yaml
