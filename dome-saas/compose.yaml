@@ -51,12 +51,11 @@ services:
   issuer-keycloak:
     image: in2workspace/issuer-keycloak-plugin:v1.1.0-SNAPSHOT
     pull_policy: always
-    command: start --truststore-paths=/opt/keycloak/conf/truststores
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_HOSTNAME_URL: http://localhost:7001
-      KC_HOSTNAME_ADMIN_URL: http://localhost:7001
+      KC_HOSTNAME_URL: https://localhost:8443
+      KC_HOSTNAME_ADMIN_URL: https://localhost:8443
       KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/conf/server.key.pem
       KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/conf/server.crt.pem
       KC_HTTPS_TRUST_STORE_FILE: /opt/keycloak/conf/truststore.jks
@@ -76,12 +75,16 @@ services:
       TOKEN_EXPIRATION: 2592000 # required?
     ports:
       - "7001:8080"
+      - "8443:8443"
     extra_hosts:
       - "dome.saas.local:172.23.0.100"
     volumes:
-      - ./certs/server.key:/opt/keycloak/conf/server.key.pem
-      - ./certs/server.crt:/opt/keycloak/conf/server.crt.pem
-      - keycloak_truststore:/opt/keycloak/conf/truststore.jks
+      - ./certs/localhost-key.pem:/opt/keycloak/conf/server.key.pem
+      - ./certs/localhost-crt.pem:/opt/keycloak/conf/server.crt.pem
+      - ./scripts/issuer-keycloak-init.sh:/opt/keycloak/bin/issuer-keycloak-init.sh
+      - ./certs/truststore.jks:/opt/keycloak/conf/truststore.jks
+#      - keycloak_truststore:/opt/keycloak/conf/truststore.jks
+#    entrypoint: /bin/sh /opt/keycloak/bin/issuer-keycloak-init.sh
     networks:
       - dome-saas-network
 
