@@ -49,7 +49,7 @@ services:
       - dome-saas-network
 
   issuer-keycloak:
-    image: in2workspace/issuer-keycloak-plugin:v1.1.0-SNAPSHOT
+    image: in2workspace/dome-issuer-keycloak:v1.0.0-SNAPSHOT
     pull_policy: always
     environment:
       KEYCLOAK_ADMIN: admin
