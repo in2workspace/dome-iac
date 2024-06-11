@@ -206,7 +206,7 @@ services:
       - dome-saas-network
 
   wallet-ui:
-    image: in2workspace/wallet-ui:v1.2.0
+    image: in2workspace/wallet-ui:v1.2.0-SNAPSHOT
     pull_policy: always
     environment:
       WALLET_API_INTERNAL_DOMAIN: http://localhost:8082
@@ -214,7 +214,7 @@ services:
       WALLET_API_WEBSOCKET_PATH: /api/v1/pin
       WALLET_API_EXECUTE_CONTENT_PATH: /api/v1/execute-content
       WALLET_API_REQUEST_CREDENTIAL_PATH: /api/v1/request-credential
-      WALLET_API_VERIFIABLE_PRESENTATION_PATH: /api/v1/verifiable-presentation
+      WALLET_API_VERIFIABLE_PRESENTATION_PATH: /api/v1/vp
       WALLET_API_CREDENTIALS_PATH: /api/v1/credentials
       WALLET_API_CREDENTIALS_BY_ID_PATH: /api/v1/credentials?credentialId=
       WALLET_API_REQUEST_SIGNED_CREDENTIAL_PATH: /api/v1/request-signed-credential
@@ -231,7 +231,7 @@ services:
       - dome-saas-network
 
   wallet-api:
-    image: in2workspace/wallet-api:v1.2.0
+    image: in2workspace/wallet-api:v1.2.0-SNAPSHOT
     pull_policy: always
     entrypoint: /bin/sh /vault/start-wallet-api.sh
     environment:
