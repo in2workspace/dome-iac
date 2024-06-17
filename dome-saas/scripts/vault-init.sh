@@ -16,10 +16,10 @@ SEALED=$(echo "$STATUS" | grep 'Sealed' | awk '{print $2}')
 # If Vault is not initialized and is sealed, initialize and unseal it
 if [ "$INITIALIZED" = "false" ] && [ "$SEALED" = "true" ]; then
     echo "Initializing and Unsealing Vault..."
-    vault operator init > /vault/generated_keys.txt
+    vault operator init > /vault/file/generated_keys.txt
 
     # Extract the unseal keys
-    keyArray=$(grep "Unseal Key " /vault/generated_keys.txt | cut -c15-)
+    keyArray=$(grep "Unseal Key " /vault/file/generated_keys.txt | cut -c15-)
     set -- $keyArray
     # Unseal the Vault
     vault operator unseal $1
@@ -27,8 +27,8 @@ if [ "$INITIALIZED" = "false" ] && [ "$SEALED" = "true" ]; then
     vault operator unseal $3
 
     # Retrieve the root token
-    rootToken=$(grep "Initial Root Token: " /vault/generated_keys.txt | cut -c21-)
-    echo $rootToken > /vault/root_token.txt
+    rootToken=$(grep "Initial Root Token: " /vault/file/generated_keys.txt | cut -c21-)
+    echo $rootToken > /vault/file/root_token.txt
     export VAULT_TOKEN=$rootToken
 
     # Enable key-value (KV) storage
@@ -39,7 +39,7 @@ elif [ "$INITIALIZED" = "true" ] && [ "$SEALED" = "true" ]; then
     echo "Unsealing Vault..."
     # Unseal Vault using the stored keys
     # Extract the unseal keys
-    keyArray=$(grep "Unseal Key " /vault/generated_keys.txt | cut -c15-)
+    keyArray=$(grep "Unseal Key " /vault/file/generated_keys.txt | cut -c15-)
     set -- $keyArray
     vault operator unseal $1
     vault operator unseal $2
