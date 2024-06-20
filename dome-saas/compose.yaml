@@ -82,8 +82,8 @@ services:
       - ./certs/localhost-key.pem:/opt/keycloak/conf/server.key.pem
       - ./certs/localhost-crt.pem:/opt/keycloak/conf/server.crt.pem
       - ./scripts/issuer-keycloak-init.sh:/opt/keycloak/bin/issuer-keycloak-init.sh
-      - ./certs/truststore.jks:/opt/keycloak/conf/truststore.jks
-#      - keycloak_truststore:/opt/keycloak/conf/
+      # - ./certs/truststore.jks:/opt/keycloak/conf/truststore.jks
+      - keycloak_truststore:/opt/keycloak/conf/
 #    entrypoint: /bin/sh /opt/keycloak/bin/issuer-keycloak-init.sh
     networks:
       - dome-saas-network
