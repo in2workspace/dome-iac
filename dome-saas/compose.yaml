@@ -49,9 +49,8 @@ services:
       - dome-saas-network
 
   issuer-keycloak:
-    image: local-dome-keycloak:latest
-    # image: in2workspace/dome-issuer-keycloak:v1.0.0-SNAPSHOT
-    # pull_policy: always
+    image: in2workspace/dome-issuer-keycloak:v1.0.0
+    pull_policy: always
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
